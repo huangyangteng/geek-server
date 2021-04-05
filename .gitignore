@@ -5,3 +5,4 @@ node_modules
 *.zip%
 server/node_modules
 EB_Navigation
+excels
