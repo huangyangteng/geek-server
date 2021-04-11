@@ -10,6 +10,7 @@ const QUERY={
 module.exports={
     getList(query=QUERY,cookie=COOKIE){
         const {current,pageSize,startTime,endTime,rate}=query
+        console.log(`curl 'https://rate.taobao.com/sellercenter/sellerCenterList.htm?spm=a1z0b.13405431.0.0.73e71d90WJr9J2&_tb_token_=f475beb7a10e8&_tb_token_=f475beb7a10e8&current=${current}&pageSize=${pageSize}&pureData=true&rate=${rate}&dateRange=${startTime}%2C${endTime}'`)
         return `curl 'https://rate.taobao.com/sellercenter/sellerCenterList.htm?spm=a1z0b.13405431.0.0.73e71d90WJr9J2&_tb_token_=f475beb7a10e8&_tb_token_=f475beb7a10e8&current=${current}&pageSize=${pageSize}&pureData=true&rate=${rate}&dateRange=${startTime}%2C${endTime}' \
         -H 'authority: rate.taobao.com' \
         -H 'pragma: no-cache' \
