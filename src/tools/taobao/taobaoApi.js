@@ -8,7 +8,7 @@ const QUERY={
     rate:0 //-1差评  0中评
 }
 module.exports={
-    getList(query=QUERY){
+    getList(query=QUERY,cookie=COOKIE){
         const {current,pageSize,startTime,endTime,rate}=query
         return `curl 'https://rate.taobao.com/sellercenter/sellerCenterList.htm?spm=a1z0b.13405431.0.0.73e71d90WJr9J2&_tb_token_=f475beb7a10e8&_tb_token_=f475beb7a10e8&current=${current}&pageSize=${pageSize}&pureData=true&rate=${rate}&dateRange=${startTime}%2C${endTime}' \
         -H 'authority: rate.taobao.com' \
@@ -23,7 +23,7 @@ module.exports={
         -H 'sec-fetch-dest: empty' \
         -H 'referer: https://rate.taobao.com/sellercenter/listPage.htm?pagination.current=1&pagination.pageSize=20&quickFilter.rate=-1&spm=a1z0b.13405431.0.0.73e71d90WJr9J2' \
         -H 'accept-language: zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7' \
-        -H 'cookie: ${COOKIE}' \
+        -H 'cookie: ${cookie}' \
         --compressed`
     }
 }

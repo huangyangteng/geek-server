@@ -17,6 +17,11 @@ interface WatchRes {
     title: string
     list: VideoItem[]
 }
+interface ListItem{
+    id:string
+    name:string
+    age:number
+}
 
 router.all('/test', async (ctx) => {
     console.log(ctx.request.files)
@@ -33,25 +38,20 @@ router.all('/test', async (ctx) => {
 
 //https://www.npmjs.com/package/koa-send
 router.all('/taobao', async (ctx) => {
-    const { cookie, startTime, endTime, rate } = ctx.request.body
-    console.log(
-        'cookie,startTime,endTime,rate',
-        cookie,
-        startTime,
-        endTime,
-        rate
-    )
+    const {  startTime, endTime, rate } = ctx.request.body
+    const type=rate==0?'中评':'差评'
+    const fileName=`${startTime}-${endTime}${type}.xlsx`
     // 生成文件
-    const success = await handleTaobaoData()
+    const success = await handleTaobaoData(ctx.request.body,fileName)
     console.log("success", success)
+    ctx.body='ok'
     if (success) {
-        const path = '3.29-4.04.xlsx'
+        const path = 'excels/'+fileName
         ctx.attachment(path)
         await send(ctx, path)
     }else{
         ctx.body='error'
     }
-    // ctx.body = 'ok'
 })
 
 router.post('/watch', async (ctx) => {
@@ -75,6 +75,15 @@ router.post('/watch', async (ctx) => {
         title: getName(path),
         list: videoList,
     })
+})
+
+router.get('/list',async (ctx)=>{
+    const {id}=ctx.request.query
+    let list=[{id:0,name:'xiaoming',age:11},{id:1,name:'xiaohong',age:23},{id:2,name:'Jack',age:11},{id:3,name:'Peter',age:23},{id:3,name:'Mouse',age:23}]
+    if(id && id!=-1){
+        list=list.filter(item=>item.id==id)
+    }
+    ctx.body=list
 })
 
 export default router.routes()

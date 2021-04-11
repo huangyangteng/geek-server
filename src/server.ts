@@ -2,6 +2,8 @@ import * as Koa from 'koa'
 import * as koaBody from 'koa-body'
 import registerRouter from './router/index'
 import * as path from 'path'
+const cors = require('koa2-cors');
+
 const app = new Koa()
 app.use(
     koaBody({
@@ -13,7 +15,8 @@ app.use(
         }
     })
 )
-
+// 设置跨域
+app.use(cors())
 app.use(async (ctx, next) => {
     // Log the request to the console
     console.log('Url:', ctx.url)
@@ -23,6 +26,6 @@ app.use(async (ctx, next) => {
 
 app.use(registerRouter)
 
-app.listen(65136)
+app.listen(8882)
 
-console.log('Server running on port 65136')
+console.log('Server running on port  http://localhost:8882  ')

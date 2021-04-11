@@ -19,7 +19,7 @@ worksheet.columns = [
     { header: '备注', key: 'note', width: 15 ,style: { alignment:{ wrapText: true, vertical: 'top', horizontal: 'left' } }},
   ];
 
-const handleExcel= (list)=>{
+const handleExcel= (list,fileName)=>{
   list.forEach( (item,index)=>{
     // 添加行
     worksheet.addRow(item)
@@ -34,7 +34,7 @@ const handleExcel= (list)=>{
     })
   })
   
-  return workbook.xlsx.writeFile('excels/3.29-4.04.xlsx');
+  return workbook.xlsx.writeFile(`excels/${fileName}`);
 }
 
 

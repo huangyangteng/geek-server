@@ -78,11 +78,24 @@ function formatList(list){
 
 
 module.exports={
-    handleTaobaoData(){
-        return new Promise((resolve,reject)=>{
-            shell.exec(getList(),{silent:true}, async (code, output, stderr) => {
+    handleTaobaoData(req,fileName){
+        const { cookie, startTime, endTime, rate } = req
+        const query={
+            current:1,
+            pageSize:100,
+            startTime,
+            endTime,
+            rate //-1差评  0中评
+        }
+        return new Promise((resolve)=>{
+            shell.exec(getList(query,cookie),{silent:true}, async (code, output, stderr) => {
                 if (code == 0) {
-                    let list=JSON.parse(output).data.dataSource
+                    let list=[]
+                    try {
+                        list=JSON.parse(output).data.dataSource
+                    } catch (error) {
+                        resolve(false)
+                    }
                     list=formatList(list)
                     const arr=[]
                     for(let i=0;i<list.length;i++){
@@ -93,7 +106,7 @@ module.exports={
                        arr.push(item)
                     }
                     const {handleExcel}=require('./excel')
-                    await handleExcel(arr)
+                    await handleExcel(arr,fileName)
                     // 返回流
                     resolve(true)
                 }else{
