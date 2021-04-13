@@ -7,7 +7,14 @@ import { QueryItemType } from '../types/infoType'
 const DATA_PATH = path.join(__dirname, '../data/info.json')
 
 router.get('/', async ctx => {
-    const data = readFileAndParse(DATA_PATH)
+    let data:QueryItemType[] = readFileAndParse(DATA_PATH)
+    const {query}=ctx.query
+    if(query){
+        data=data.filter(item=>{
+            return item.answer.includes(query)||item.value.includes(query)||item.desc.includes(query)
+        })
+    }
+  
     ctx.body = getRes<QueryItemType[]>(2000, data)
 })
 
