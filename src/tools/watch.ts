@@ -23,7 +23,7 @@ function walkDir(dir: string) {
 function filterDir(list:String[]) {
     return list.filter(item => !item.startsWith('.'))
 }
-export function generateResource(dir='/Users/h/Desktop/learning'){
+export function generateResource(dir='/Users/h/Desktop/learning',targetFile:string){
     const columns = filterDir(fs.readdirSync(dir))
     const result = columns.map(column => {
         const columnDir = dir + '/' + column
@@ -42,5 +42,5 @@ export function generateResource(dir='/Users/h/Desktop/learning'){
             list: formatedArticles
         }
     })
-    fs.writeFileSync('video.json', JSON.stringify(result, 4))
+    fs.writeFileSync(targetFile, JSON.stringify(result))
 }
