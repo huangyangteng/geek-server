@@ -1,14 +1,17 @@
 import * as Router from 'koa-router'
 const router = new Router()
 import * as path from 'path'
-import { getRes, readFileAndParse } from '../tools/index'
-import { generateResource } from '../tools/watch';
+import  * as shelljs from 'shelljs';
+import { getRes, readFileAndParse, walkDir, getExt } from '../tools/index';
+import { generateResource, getOutput, getCodec } from '../tools/watch';
 import { WatchItemContent, WatchChildItem } from '../types/watchType';
 
 const PROJECT_PATH = path.join(__dirname, '../data/watch.json')
 
 const DEFAULT_DIR='/Users/h/Desktop/learnvideo'
-// 生成数据
+
+//curl -X POST --data-urlencode "dir=/Users/h/Desktop/learnvideo" http://localhost:9999/watch/run
+
 router.all('/run',async ctx=>{
     let {dir}=ctx.request.body
     if(!dir){
@@ -22,6 +25,43 @@ router.all('/run',async ctx=>{
         ctx.body = getRes<string>(5000, '生成失败'+error)
     }
 })
+//curl -X POST --data-urlencode "dir=/Users/h/Downloads/bdyDownload/59-Vue开发实战/福利篇" http://localhost:9999/watch/transcode
+
+router.all('/transcode',async ctx=>{
+
+    let {dir}=ctx.request.body
+    if(!dir){
+        ctx.body = getRes<string>(5000, '请输入路径')
+        return 
+    }
+        const list=walkDir(dir)
+        for(let i=0;i<list.length;i++){
+            let item=list[i]
+            if(getExt(item)=='mp4'){
+                let codes=await getCodec(item)
+                console.log("codes", codes)
+                shelljs.exec(`ffmpeg -i ${item} -c:v libx264 ${getOutput(item)}`,(code,stdout,stderr)=>{
+                    if(code==0){
+                        console.log('success')
+                        shelljs.exec(`rm ${item}`)
+                    }
+                })
+
+            }
+           
+        }
+        // list.forEach(item=>{
+        //     if(getExt(item)=='mp4'){
+        //         shelljs.exec(`ffmpeg -i ${item} -c:v libx264 ${getOutput(item)}`)
+        //         console.log('------------------------------------------------')
+        //     }
+        // })
+     
+        ctx.body=getRes<string>(2000,'success')
+        
+   
+})
+
 
 
 

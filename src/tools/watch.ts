@@ -1,10 +1,38 @@
 import * as  fs from 'fs'
 import { uuid } from './index';
+const  ffmpeg = require('fluent-ffmpeg');
+
+export function getOutput(str:string){
+    const filename=str.split('/').pop()
+    const i=str.indexOf(filename)
+    return  str.slice(0,i)+'p_'+filename
+}
+
+export function getCodec(path:string){
+    return new Promise((resolve)=>{
+        ffmpeg.ffprobe(path,function(err:any, metadata:any) {
+            var audioCodec = null;
+            var videoCodec = null;
+            metadata.streams.forEach(function(stream:any){
+                if (stream.codec_type === "video")
+                    videoCodec = stream.codec_name;
+                else if (stream.codec_type === "audio")
+                    audioCodec = stream.codec_name;
+            });
+            resolve({
+                video:videoCodec,
+                audio:audioCodec
+            })
+        });
+    })
+   
+}
+
 /**
  * 遍历目录下面的所有文件
  * @param dir
  */
-function walkDir(dir: string) {
+export function walkDir(dir: string) {
     let results: string[] = []
     const list = fs.readdirSync(dir)
     list.forEach(function(file:string) {
