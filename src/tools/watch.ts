@@ -59,7 +59,7 @@ export function generateResource(dir='/Users/h/Desktop/learning',targetFile:stri
         const formatedArticles = articles.map(item => {
             const list = walkDir(columnDir + '/' + item)
             return {
-                id:uuid(),
+                id:hashCode(item as string),//
                 title: item,
                 list: list
             }
@@ -71,4 +71,13 @@ export function generateResource(dir='/Users/h/Desktop/learning',targetFile:stri
         }
     })
     fs.writeFileSync(targetFile, JSON.stringify(result))
+}
+export function hashCode(str:string) {
+    return str
+        .split('')
+        .reduce(
+            (prevHash, currVal) =>
+                ((prevHash << 5) - prevHash + currVal.charCodeAt(0)) | 0,
+            0
+        )
 }

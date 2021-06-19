@@ -10,11 +10,12 @@ router.get('/', async ctx => {
     const data = readFileAndParse(PROJECT_PATH)
     ctx.body = getRes<UserItem[]>(2000, data)
 })
+//curl  http://localhost:9999/user/query?name=&phone
 router.get('/query', async ctx => {
     // 通过name,sex,age查询
     const data:UserItem[] = readFileAndParse(PROJECT_PATH)
     let {name='',phone='',sex=0,pageNum=1,pageSize=10}=ctx.query
-    let tmp
+    let tmp=data
     if(name){
         name=name.toLowerCase()
         tmp=data.filter(item=>  item.name.toLowerCase().indexOf(name) !=-1)
@@ -25,8 +26,11 @@ router.get('/query', async ctx => {
     if(sex){
         tmp=data.filter(item=>item.sex==sex)
     }
-    
-    ctx.body = getRes<UserItem[]>(2000, tmp)
+    tmp
+    console.log("tmp", tmp)
+    tmp=tmp.slice((pageNum-1)*pageSize,pageNum*pageSize)
+    const list=getRes<UserItem[]>(2000, tmp)
+    ctx.body =list
 })
 
 //curl -X POST -d '{"name":"Jack","age":11,"sex":0,"phone":"15196252581"}' -H 'Content-Type: application/json' http://localhost:9999/user/
