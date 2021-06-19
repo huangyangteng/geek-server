@@ -73,11 +73,12 @@ export function generateResource(dir='/Users/h/Desktop/learning',targetFile:stri
     fs.writeFileSync(targetFile, JSON.stringify(result))
 }
 export function hashCode(str:string) {
-    return str
+    const hash= str
         .split('')
         .reduce(
             (prevHash, currVal) =>
                 ((prevHash << 5) - prevHash + currVal.charCodeAt(0)) | 0,
             0
         )
+    return Math.abs(hash)
 }
