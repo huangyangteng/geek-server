@@ -1,10 +1,13 @@
 import * as Router from 'koa-router'
-import { getRes, walkDir, getExt, uuid } from '../tools/index';
+import { getRes, walkDir, getExt, uuid, writeFile, readFileAndParse } from '../tools/index';
 const router = new Router()
 import * as fs from 'fs'
 import * as send from 'koa-send'
+import * as path from 'path'
+
 //@ts-ignore
 import { handleTaobaoData } from '../tools/taobao/handleTaobaoData.js'
+import dayjs = require('dayjs');
 function getName(path: string) {
     return path.split('/').pop()
 }
@@ -22,14 +25,43 @@ interface ListItem{
     name:string
     age:number
 }
-
+interface File{
+    id:string
+    name:string
+    path:string
+    date:string
+}
+// 上传
+const FILES_PATH = path.join(__dirname, '../data/files.json')
+router.post('/upload',async (ctx)=>{
+    const {path,name}=ctx.request.files.file
+    const filePath='gk-files'+'/'+path.split('/').pop()
+    const files:File[]=readFileAndParse(FILES_PATH)
+    writeFile<File[]>(FILES_PATH,[{id:uuid(),name,path:filePath,date:dayjs().format('YYYY-MM-DD HH:mm:ss')},...files])
+    ctx.body=getRes<any>(2000,{data:'ok'})
+})
+// 获取上传的文件列表
+router.get('/files',async (ctx)=>{
+    let files:File[]=readFileAndParse(FILES_PATH)
+    let {start,end}=ctx.query
+    // start 与end之间
+    if(start && end){
+        start=dayjs(start).subtract(1,'ms')
+        end=dayjs(end).add(1, 'ms')
+        files=files.filter(item=>{
+           return dayjs(item.date).isAfter(start) && dayjs(item.date).isBefore(end)
+        })
+    }
+    ctx.body=getRes<any>(2000,files)
+})
+// 测试接口
 router.all('/test', async (ctx) => {
     console.log(ctx.request.files)
     ctx.body = getRes<any>(2000, {
         method: ctx.request.method,
         url: ctx.request.url,
         header: ctx.request.header,
-        params: ctx.query,
+        params: ctx.query,//name=xxx&age=xxx
         // params:ctx.params
         body: ctx.request.body,
         files: ctx.request.files,

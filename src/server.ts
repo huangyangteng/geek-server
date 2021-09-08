@@ -9,7 +9,7 @@ app.use(
     koaBody({
         multipart: true, //支持文件上传
         formidable: {
-            uploadDir: path.join(__dirname, 'data/upload'),
+            uploadDir: path.join(__dirname, 'data/gk-files'),
             keepExtensions: true,
             maxFieldsSize: 2 * 1024 * 1024
         }
@@ -26,6 +26,6 @@ app.use(async (ctx, next) => {
 
 app.use(registerRouter)
 
-app.listen(9999)
+app.listen(22222)
 
 console.log('Server running on port  http://localhost:9999  ')
