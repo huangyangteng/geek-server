@@ -2,10 +2,10 @@ export interface UserItem {
     id?: string
     state?: number
     name:string
-    age:number
-    sex:Sex
+    cover?:string //封面
+    head?:string //头像
+    password?:string
     phone:string
-    profilePhoto?:string
 }
 export enum Sex{
     male=0, //男
