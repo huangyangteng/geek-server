@@ -26,6 +26,7 @@ app.use(async (ctx, next) => {
 
 app.use(registerRouter)
 
-app.listen(22222)
+const PORT=22222
+app.listen(PORT)
 
-console.log('Server running on port  http://localhost:9999  ')
+console.log('Server running on port  http://localhost:'+PORT+'  ')
