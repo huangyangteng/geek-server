@@ -9,7 +9,7 @@ app.use(
     koaBody({
         multipart: true, //支持文件上传
         formidable: {
-            uploadDir: path.join(__dirname, 'data/gk-files'),
+            uploadDir: path.join(__dirname,'..', 'gk-files'),
             keepExtensions: true,
             maxFieldsSize: 2 * 1024 * 1024
         }
