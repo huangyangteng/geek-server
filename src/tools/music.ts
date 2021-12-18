@@ -1,6 +1,6 @@
 import * as  fs from 'fs'
 import { uuid } from './index';
-const  ffmpeg = require('fluent-ffmpeg');
+// const  ffmpeg = require('fluent-ffmpeg');
 
 export function getOutput(str:string){
     const filename=str.split('/').pop()
@@ -10,20 +10,21 @@ export function getOutput(str:string){
 
 export function getCodec(path:string){
     return new Promise((resolve)=>{
-        ffmpeg.ffprobe(path,function(err:any, metadata:any) {
-            var audioCodec = null;
-            var videoCodec = null;
-            metadata.streams.forEach(function(stream:any){
-                if (stream.codec_type === "video")
-                    videoCodec = stream.codec_name;
-                else if (stream.codec_type === "audio")
-                    audioCodec = stream.codec_name;
-            });
-            resolve({
-                video:videoCodec,
-                audio:audioCodec
-            })
-        });
+        resolve({ok:true})
+        // ffmpeg.ffprobe(path,function(err:any, metadata:any) {
+        //     var audioCodec = null;
+        //     var videoCodec = null;
+        //     metadata.streams.forEach(function(stream:any){
+        //         if (stream.codec_type === "video")
+        //             videoCodec = stream.codec_name;
+        //         else if (stream.codec_type === "audio")
+        //             audioCodec = stream.codec_name;
+        //     });
+        //     resolve({
+        //         video:videoCodec,
+        //         audio:audioCodec
+        //     })
+        // });
     })
    
 }

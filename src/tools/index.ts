@@ -1,5 +1,6 @@
 import * as fs from 'fs'
-
+import * as shell from 'shelljs'
+import { RequestRes } from '../types/index';
 /**
  *
  * @param code 2000|5000
@@ -69,4 +70,36 @@ export function getExt(filename: string) {
         .split('.')
         .pop()
         .toLowerCase()
+}
+
+export const  request=async(api:string):Promise<RequestRes>=>{
+    return new Promise((resolve)=>{
+        shell.exec(api,{silent:true},(code, output, stderr)=>{
+
+            if(code===0){//请求成功
+                try{
+                    resolve({
+                        code,
+                        data:JSON.parse(output)
+                    })
+                }catch(error){
+                    resolve({
+                        code,
+                        data:'success'
+                    })
+                }
+               
+            }else{
+                resolve( {
+                    code,
+                    data:stderr
+                })
+            }
+        })
+    })
+    
+
+}
+export function sleep(ms:number) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
 }

@@ -1,11 +1,9 @@
 export interface UserItem {
     id?: string
-    state?: number
-    name:string
     cover?:string //封面
-    head?:string //头像
+    avatar?:string //头像
     password?:string
-    phone:string
+    username:string
 }
 export enum Sex{
     male=0, //男

@@ -1,0 +1,14 @@
+### 查询用户列表
+GET http://localhost:22222/user/ HTTP/1.1
+
+### 用户登录
+POST http://localhost:22222/user/login HTTP/1.1
+content-type:application/json
+
+{"username":"xiaoming","password":"123456"}
+
+### 用户注册
+POST http://localhost:22222/user/ HTTP/1.1
+content-type:application/json
+
+{"username":"xiaomin22g2","password":"123456"}

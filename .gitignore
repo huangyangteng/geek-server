@@ -6,3 +6,5 @@ node_modules
 server/node_modules
 EB_Navigation
 excels
+gk-files
+src/db/config.js
