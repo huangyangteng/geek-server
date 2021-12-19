@@ -27,7 +27,7 @@ let pool = mysql.createPool(config);
 // };
 // export default query
 
-export function query<T>(sql:string, values:any=null):Promise<T>{
+export default function query<T>(sql:string, values:any=null):Promise<T>{
     return new Promise((resolve, reject) => {
         pool.getConnection((err:any, connection:any) => {
             if (err) {

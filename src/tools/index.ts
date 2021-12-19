@@ -1,3 +1,4 @@
+import dayjs = require('dayjs');
 import * as fs from 'fs'
 import * as shell from 'shelljs'
 import { RequestRes } from '../types/index';
@@ -102,4 +103,23 @@ export const  request=async(api:string):Promise<RequestRes>=>{
 }
 export function sleep(ms:number) {
     return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+export  function toHump(name:string) {
+    return name.replace(/\_(\w)/g, function(all, letter){
+        return letter.toUpperCase();
+    });
+}
+export function objToHump<T>(obj: Record<string, any>){
+    let newObj: Record<string, any>={}
+    for(let key in obj){
+        newObj[toHump(key)]=obj[key]    
+    }
+    return newObj
+}
+export function arrayToHump<T>(arr:T[]){
+    return arr.map(item=>objToHump(item)) as T[]
+}
+export function formatTime(time:string,formatType='YYYY-MM-DD hh:mm:ss'){
+    return dayjs(time).format(formatType)
 }

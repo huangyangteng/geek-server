@@ -1,7 +1,7 @@
 import * as Router from 'koa-router'
 import { getRes, sleep } from '../tools/index';
 import { getUserArticles, starArticle, viewArticle } from '../tools/juejin/juejin-api';
-import { query } from '../db/mysql';
+import query from '../db/mysql';
 import { JuejinUserInfo } from '../types/juejin';
 const router = new Router()
 interface CookieItem{

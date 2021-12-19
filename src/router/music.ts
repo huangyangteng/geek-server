@@ -29,7 +29,7 @@ router.get('/', async ctx => {
     const data = readFileAndParse(PROJECT_PATH)
     ctx.body = getRes<WatchItemContent[]>(2000, data)
 })
-router.get('/query', async ctx => {
+router.get('/dddddd', async ctx => {
     const {courseId}=ctx.query
     console.log("courseId", courseId)
     const data:WatchItemContent[] = readFileAndParse(PROJECT_PATH)

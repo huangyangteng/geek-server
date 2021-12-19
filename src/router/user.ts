@@ -2,7 +2,7 @@ import * as Router from 'koa-router'
 const router = new Router()
 import { getRes } from '../tools/index'
 import { UserItem } from '../types/userTypes'
-import { query } from '../db/mysql';
+import query from '../db/mysql';
 import { OkPacket } from '../types/index';
 
 router.get('/', async ctx => {

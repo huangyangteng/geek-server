@@ -1,8 +1,16 @@
 export interface HistoryItem{
-    id:string
+    id?:string
     userId:string
-    date:string
+    type:HistoryType
+    createdTime:string
+    created_time?:string
+    updateTime:string
+    update_time?:string
     itemId:string 
-    itemName?:string
-    itemDetail?:string
+    info:string
+}
+export enum HistoryType{
+    column='column',
+    video='video',
+    audio='audio'
 }
