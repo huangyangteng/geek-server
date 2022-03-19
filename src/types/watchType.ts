@@ -9,3 +9,7 @@ export interface WatchChildItem{
     title:String,
     list:String[]
 }
+export interface WatchBBItem{
+    id:Number,
+    type:String,
+}

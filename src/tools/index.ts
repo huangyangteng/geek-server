@@ -76,17 +76,17 @@ export function getExt(filename: string) {
 export const  request=async(api:string):Promise<RequestRes>=>{
     return new Promise((resolve)=>{
         shell.exec(api,{silent:true},(code, output, stderr)=>{
-
             if(code===0){//请求成功
+                // 如果json解析失败，返回原始数据
                 try{
                     resolve({
                         code,
-                        data:JSON.parse(output)
+                        data:JSON.parse(output),
                     })
                 }catch(error){
                     resolve({
                         code,
-                        data:'success'
+                        data:output,
                     })
                 }
                

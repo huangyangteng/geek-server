@@ -1,13 +1,14 @@
 import * as Router from 'koa-router'
+
 const router = new Router()
-import { getRes } from '../tools/index'
-import { UserItem } from '../types/userTypes'
+import {getRes} from '../tools/index'
+import {UserItem} from '../types/userTypes'
 import query from '../db/mysql';
-import { OkPacket } from '../types/index';
+import {OkPacket} from '../types/index';
 
 router.get('/', async ctx => {
     // const data = readFileAndParse(PROJECT_PATH)
-    const res=await query<UserItem[]>('SELECT * from user')
+    const res = await query<UserItem[]>('SELECT * from user')
     ctx.body = getRes<UserItem[]>(2000, res)
 })
 //curl  http://localhost:9999/user/query?name=&phone
@@ -31,16 +32,20 @@ router.get('/', async ctx => {
 //登录
 //curl -X POST -d '{"username":"xiaoming","password":"123456"}' -H 'Content-Type: application/json' http://localhost:22222/user/login
 
-router.post('/login',async ctx=>{
-    const {username,password}=ctx.request.body
-    const res= await  query<UserItem[]>('SELECT * from `user` WHERE `username` = ?',[username])
-    if(res.length===0){
-        ctx.body=getRes<string>(5000,'用户不存在')
-    }else{
-        if(res[0].password===password){
-            ctx.body=getRes<string>(2000,'登录成功')
-        }else{
-            ctx.body=getRes<string>(5000,'用户名或密码错误')
+router.post('/login', async ctx => {
+    const {username, password} = ctx.request.body
+    const res = await query<UserItem[]>('SELECT * from `user` WHERE `username` = ?', [username])
+    console.log(res)
+    if (res.length === 0) {
+        ctx.body = getRes<string>(5000, '用户不存在')
+    } else {
+        if (res[0].password === password) {
+            ctx.body = getRes<UserItem>(2000, {
+                ...res[0],
+                password: null
+            })
+        } else {
+            ctx.body = getRes<string>(5000, '用户名或密码错误')
         }
     }
 })
@@ -51,17 +56,17 @@ router.post('/', async ctx => {
     const projectReq: UserItem = {
         ...ctx.request.body
     }
-    if(!projectReq.username && !projectReq.password){
-        ctx.body=getRes<string>(5000, '请求参数不完整')
+    if (!projectReq.username && !projectReq.password) {
+        ctx.body = getRes<string>(5000, '请求参数不完整')
         return
     }
     // 1. 判断该用户是否已存在
-    const res=await query<UserItem[]>('SELECT * from `user` WHERE `username`=?',[projectReq.username])
-    if(res.length>0){
-        ctx.body=getRes<string>(5000, '用户已存在')
-    }else{
-        const insertInfo=await query<OkPacket>('INSERT INTO user SET?',projectReq)
-        ctx.body=getRes<number>(2000, insertInfo.insertId)
+    const res = await query<UserItem[]>('SELECT * from `user` WHERE `username`=?', [projectReq.username])
+    if (res.length > 0) {
+        ctx.body = getRes<string>(5000, '用户已存在')
+    } else {
+        const insertInfo = await query<OkPacket>('INSERT INTO user SET?', projectReq)
+        ctx.body = getRes<number>(2000, insertInfo.insertId)
     }
 })
 

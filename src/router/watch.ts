@@ -1,16 +1,40 @@
 import * as Router from 'koa-router'
 const router = new Router()
 import * as path from 'path'
+import query from '../db/mysql';
+import { getBBVideoId, getBBVideoSrc, getVideoUrlByRes, getBBVideoInfo } from '../tools/blibli';
 import { getRes, readFileAndParse, walkDir, getExt } from '../tools/index';
 import { generateResource, getOutput, getCodec } from '../tools/watch';
-import { WatchItemContent, WatchChildItem } from '../types/watchType';
+import { WatchItemContent, WatchChildItem, WatchBBItem } from '../types/watchType';
+import { OkPacket } from '../types/index';
 
 const PROJECT_PATH = path.join(__dirname, '../data/watch.json')
 
 const DEFAULT_DIR='/Users/h/Desktop/learnvideo'
 
-//curl -X POST --data-urlencode "dir=/Users/h/Desktop/learnvideo" http://localhost:9999/watch/run
+// 解析blibli的视频
+router.all('/bb',async ctx=>{
+    const bid=getBBVideoId(ctx.request.body.link)
+    const onlySrc=ctx.request.body.onlySrc
+    // 只返回视频播放的src
+    const videoSrc=await getBBVideoSrc(ctx.request.body.link)
+    let videoInfoRes
+    let responseBody={
+        bid: bid,src:videoSrc
+    }
+    // 如果需要返回视频列表等信息，返回视频列表
+    if(!onlySrc){
+        videoInfoRes=await getBBVideoInfo(bid)
+        responseBody=Object.assign(responseBody,{
+            ...videoInfoRes.data.data
+        })
+    }
 
+    // console.log('videoInfo',videoInfo)
+    ctx.body= getRes(2000,responseBody) 
+})
+
+//curl -X POST --data-urlencode "dir=/Users/h/Desktop/learnvideo" http://localhost:9999/watch/run
 router.all('/run',async ctx=>{
     let {dir}=ctx.request.body
     if(!dir){
@@ -30,6 +54,11 @@ router.get('/', async ctx => {
     const data = readFileAndParse(PROJECT_PATH)
     ctx.body = getRes<WatchItemContent[]>(2000, data)
 })
+router.get('/bb-list',async ctx=>{
+    const res=await query<WatchBBItem[]>('SELECT * from `bb-video`')
+    ctx.body=getRes<WatchBBItem[]>(2000,res)
+})
+
 router.get('/query', async ctx => {
     const {courseId}=ctx.query
     console.log("courseId", courseId)
@@ -45,15 +74,24 @@ router.get('/query', async ctx => {
         }
     }else{
         ctx.body=getRes<string>(5000,'请输入正确的查询参数')
-
     }
-
-  
-
-  
 })
 
-
+router.post('/add',async ctx=>{
+    const {link,type}=ctx.request.body
+    const bid=getBBVideoId(link)
+    let res=await getBBVideoInfo(bid)
+    let {title,pic}=res.data.data
+    let req={
+        link,
+        type,
+        bid,
+        name:title,
+        poster:pic
+    }
+    const insertInfo=await query<OkPacket>('INSERT INTO `bb-video` SET?',req)
+    ctx.body = getRes<number>(2000, insertInfo.insertId)
+})
 
 
 export default router.routes()

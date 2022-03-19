@@ -10,5 +10,5 @@ export interface OkPacket {
   }
   export interface RequestRes{
     code:number,
-    data:any
+    data:any,
   }

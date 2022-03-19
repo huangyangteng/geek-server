@@ -11,18 +11,20 @@ import dayjs = require('dayjs');
  * 添加记录
  */
 router.post('/',async ctx=>{
-    const {itemId,type,info,userId}=ctx.request.body
+    const {itemId,type,info,userId,parentId=''}=ctx.request.body
     const currentTime=dayjs().format('YYYY-MM-DD hh:mm:ss')
+    console.log(ctx.request.body)
     let req={
         item_id:itemId,
         type,
         info,
         created_time:currentTime,
         update_time:currentTime,
-        user_id:userId
+        user_id:userId,
+        parent_id:parentId
     }
     if(!itemId || !type || !userId){
-        ctx.body=getRes<string>(4000,'参数不完整')
+        ctx.body=getRes<string>(5001,'参数不完整')
         return 
     }
     // 判断当前用户是否已经存在当前item
@@ -65,7 +67,7 @@ router.get('/',async ctx=>{
 
     }))
     
-    ctx.body=getRes<HistoryItem[]>(2000,result)
+    ctx.body=getRes<HistoryItem[]>(2000,result.reverse())
 })
 
 

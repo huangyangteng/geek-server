@@ -8,6 +8,7 @@ import * as path from 'path'
 //@ts-ignore
 import { handleTaobaoData } from '../tools/taobao/handleTaobaoData.js'
 import dayjs = require('dayjs');
+import { createTextChangeRange, createTextSpan } from 'typescript';
 function getName(path: string) {
     return path.split('/').pop()
 }
@@ -31,6 +32,12 @@ interface File{
     path:string
     date:string
 }
+router.get("/bdy(.*)",async (ctx)=>{
+    ctx.body=JSON.stringify({code:'ok'})
+})
+
+
+
 // 上传
 const FILES_PATH = path.join(__dirname, '../data/files.json')
 router.post('/upload',async (ctx)=>{
@@ -54,6 +61,9 @@ router.get('/files',async (ctx)=>{
     }
     ctx.body=getRes<any>(2000,files)
 })
+
+
+
 // 测试接口
 router.all('/test', async (ctx) => {
     console.log(ctx.request.files)

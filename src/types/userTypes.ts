@@ -4,6 +4,7 @@ export interface UserItem {
     avatar?:string //头像
     password?:string
     username:string
+    cookie?:string
 }
 export enum Sex{
     male=0, //男
