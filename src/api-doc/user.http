@@ -12,3 +12,9 @@ POST http://localhost:22222/user/ HTTP/1.1
 content-type:application/json
 
 {"username":"xiaomin22g2","password":"123456"}
+
+### 修改用户信息
+POST http://localhost:22222/user/update HTTP/1.1
+content-type:application/json
+
+{"id":"8","username":"xiaomin22g2","filter":"ajdjfj,djfj"}

@@ -19,18 +19,19 @@ content-type:application/json
 
 {"link":"https://www.bilibili.com/video/BV1Mg411g7C8","type":"letter"}
 
-### 添加bb视频
-DELETE http://localhost:22222/watch/delete HTTP/1.1
-content-type:application/json
-
-{"ids":[0,1]
-
 
 ### 添加acfun视频
 POST http://localhost:22222/watch/add HTTP/1.1
 content-type:application/json
 
 {"link":"https://www.acfun.cn/v/ac31616020","type":"gradute","from":"acfun"}
+
+### 删除视频
+POST http://localhost:22222/watch/delete HTTP/1.1
+content-type:application/json
+
+{"ids":[10,11]}
+
 
 
 ### 获取bb视频

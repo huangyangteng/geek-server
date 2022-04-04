@@ -5,6 +5,7 @@ export interface UserItem {
     password?:string
     username:string
     cookie?:string
+    filter?:string
 }
 export enum Sex{
     male=0, //男

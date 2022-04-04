@@ -4,34 +4,17 @@ const router = new Router()
 import {getRes} from '../tools/index'
 import {UserItem} from '../types/userTypes'
 import query from '../db/mysql';
-import {OkPacket} from '../types/index';
+import { OkPacket } from '../types/index';
 
+//获取用户列表
 router.get('/', async ctx => {
     // const data = readFileAndParse(PROJECT_PATH)
     const res = await query<UserItem[]>('SELECT * from user')
     ctx.body = getRes<UserItem[]>(2000, res)
 })
-//curl  http://localhost:9999/user/query?name=&phone
-// router.get('/query', async ctx => {
-//     // 通过name,sex,age查询
-//     const data:UserItem[] = readFileAndParse(PROJECT_PATH)
-//     let {name='',phone='',pageNum=1,pageSize=10}=ctx.query
-//     let tmp=data
-//     if(name){
-//         name=name.toLowerCase()
-//         tmp=data.filter(item=>  item.name.toLowerCase().indexOf(name) !=-1)
-//     }
-//     if(phone){
-//         tmp=data.filter(item=>item.phone==phone)
-//     }
-//     tmp=tmp.slice((pageNum-1)*pageSize,pageNum*pageSize)
-//     const list=getRes<UserItem[]>(2000, tmp)
-//     ctx.body =list
-// })
 
 //登录
 //curl -X POST -d '{"username":"xiaoming","password":"123456"}' -H 'Content-Type: application/json' http://localhost:22222/user/login
-
 router.post('/login', async ctx => {
     const {username, password} = ctx.request.body
     const res = await query<UserItem[]>('SELECT * from `user` WHERE `username` = ?', [username])
@@ -47,6 +30,44 @@ router.post('/login', async ctx => {
         } else {
             ctx.body = getRes<string>(5000, '用户名或密码错误')
         }
+    }
+})
+
+//修改用户信息
+router.post('/update',async ctx=>{
+    const {id} = ctx.request.body
+    const res = await query<UserItem[]>('SELECT * from `user` WHERE `id` = ?', [id])
+    if (res.length === 0) {
+        ctx.body = getRes<string>(5000, '用户不存在')
+    } else {
+        // 记录修改之前的值
+        const {username:oldUserName,password:oldPassword,avatar:oldAvatar,cover:oldCover,filter:oldFilter}=res[0]
+        // 如果没有传对应的key过来，值为修改之前的值
+        let {username=oldUserName,password=oldPassword,avatar=oldAvatar,cover=oldCover,filter=oldFilter} = ctx.request.body
+        if(filter){
+            console.log('filter',filter)
+            let tmp=filter.split(',')
+            let old=oldFilter.split(',')
+            let newFilter=tmp.concat(old)
+            filter=[...new Set(newFilter)].join(',')
+            console.log('new filter',filter)
+        }
+        // 修改用户信息
+        const updateRes=await query<OkPacket>('UPDATE user SET username=?,password=?,avatar=?,cover=?,filter=? WHERE id=? ',[
+            username,
+            password,
+            avatar,
+            cover,
+            filter,
+            id
+        ])
+        ctx.body = getRes<UserItem>(2000, {
+            id,
+            username,
+            avatar,
+            cover,
+            filter
+        })
     }
 })
 
@@ -69,38 +90,5 @@ router.post('/', async ctx => {
         ctx.body = getRes<number>(2000, insertInfo.insertId)
     }
 })
-
-//curl -X PUT -d '{"name":"Jack_N","age":11,"sex":0,"phone":"15196252581"}' -H 'Content-Type: application/json' http://localhost:9999/user/TO0DVSMZgHOhQspV
-// router.put('/:id', async ctx => {
-//     const projects: UserItem[] = readFileAndParse(PROJECT_PATH)
-//     const resultIndex = projects.findIndex(item => item.id == ctx.params.id)
-//     if (resultIndex == -1) {
-//         ctx.body = getRes<string>(5000, '不存在该项目')
-//         return
-//     }
-//     const newProject = Object.assign({}, projects[resultIndex], {
-//         ...ctx.request.body
-//     })
-//     projects.splice(resultIndex, 1, newProject)
-//     writeFile<UserItem[]>(PROJECT_PATH, projects)
-//     ctx.body = getRes<UserItem>(2000, newProject)
-// })
-
-// router.delete('/:id', async ctx => {
-//     const projects: UserItem[] = readFileAndParse(PROJECT_PATH)
-//     const resultIndex = projects.findIndex(item => item.id == ctx.params.id)
-//     if (resultIndex != -1) {
-//         const newProject = Object.assign({}, projects[resultIndex], {
-//             state: 0
-//         })
-//         projects.splice(resultIndex, 1, newProject)
-//         writeFile<UserItem[]>(PROJECT_PATH, projects)
-//         ctx.body = getRes<number>(2000, ctx.params.id)
-//         return
-//     } else {
-//         ctx.body = getRes<string>(5000, '不存在该id')
-//         return
-//     }
-// })
 
 export default router.routes()

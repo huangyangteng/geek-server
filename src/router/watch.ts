@@ -97,6 +97,7 @@ router.get('/query', async (ctx) => {
 
 router.post('/add', async (ctx) => {
     const { link, type, from = 'bb' } = ctx.request.body
+    console.log(ctx.request.body)
     let req
     if (from === 'bb') {
         const bid = getBBVideoId(link)
@@ -127,8 +128,14 @@ router.post('/add', async (ctx) => {
     const insertInfo = await query<OkPacket>('INSERT INTO `bb-video` SET?', req)
     ctx.body = getRes<number>(2000, insertInfo.insertId)
 })
-router.delete('/delete',async (ctx)=>{
-    
+router.post('/delete',async (ctx)=>{
+    const {ids}=ctx.request.body
+    if(ids.length===0){
+        ctx.body = getRes<string>(2000,'affectedRows:0' )
+        return 
+    }
+    const deleteInfo=await query<OkPacket>('DELETE FROM `bb-video` WHERE id IN '+`(${ids.join(',')})`,)
+    ctx.body = getRes<string>(2000,'affectedRows:'+deleteInfo.affectedRows )
 })
 
 
