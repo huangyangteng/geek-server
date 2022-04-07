@@ -38,6 +38,15 @@ function getVideoInfo(str:string) {
     const videoInfo=JSON.parse(JSON.parse(`"${res[1]}"`))
     return videoInfo.adaptationSet[0].representation[0].url
 }
+function getSpareSrc(str:string){
+     //[version:'',adaptationSet:[{id:0,duration:2000,representation:[{id:1,url:''},{id:2,url:''}]}]]
+     var reg = /ksplayJson":"(\{.*\})","ksPlayJsonHevc/gim
+     let res = reg.exec(str)
+     // console.log( res[1][0])
+     // console.log(res.length,JSON.parse(JSON.parse(`"${res[1]}"`)) )
+     const videoInfo=JSON.parse(JSON.parse(`"${res[1]}"`))
+     return videoInfo.adaptationSet[0].representation
+}
 function getTitle($:any){
     return $('h1.title').text()
 }
@@ -59,7 +68,8 @@ export const getAcVideoInfo=async(link:string,onlySrc:boolean|undefined)=>{
         title:getTitle($),
         pic:getCover(str),
         pages:getPages($),
-        src:getVideoInfo(str)
+        src:getVideoInfo(str),
+        spareSrc:getSpareSrc(str)
     }
 
 }
