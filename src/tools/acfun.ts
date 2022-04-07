@@ -1,8 +1,8 @@
 import * as cheerio from 'cheerio'
 import { request } from '.';
 import { writeFile } from './index';
-import * as path from 'path';
-import * as  fs from 'fs';
+// import * as path from 'path';
+// import * as  fs from 'fs';
 
 
 function getPages($:any) {
@@ -60,8 +60,8 @@ export const getAcVideoInfo=async(link:string,onlySrc:boolean|undefined)=>{
         curl ${link}
     `
     const res=await request(api)
-    const FILES_PATH = path.join(__dirname, '../data/test.json')
-    fs.writeFileSync(FILES_PATH, res.data)
+    // const FILES_PATH = path.join(__dirname, '../data/test.json')
+    // fs.writeFileSync(FILES_PATH, res.data)
     const $ = cheerio.load(res.data)
     const str=$.html()
     return {
