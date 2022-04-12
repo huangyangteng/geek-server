@@ -1,49 +1,54 @@
-import { request } from "."
-import query from "../db/mysql"
-import { UserItem } from '../types/userTypes';
-export const handleBBShortLink=async(link:string)=>{
+import { request } from '.'
+import query from '../db/mysql'
+import { UserItem } from '../types/userTypes'
+export const handleBBShortLink = async (link: string) => {
     // 请求
-    const linkRes=await request(`curl ${link}`)
-    console.log('linkRes',linkRes)
-    const reg=/https?:\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/
-    let videoLink=linkRes.data.match(reg)[0]
-    videoLink=videoLink.split('?')[0]
+    const linkRes = await request(`curl ${link}`)
+    console.log('linkRes', linkRes)
+    const reg = /https?:\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/
+    let videoLink = linkRes.data.match(reg)[0]
+    videoLink = videoLink.split('?')[0]
     return videoLink
 }
 export function getBBVideoId(link: string) {
     link = link.split('?')[0]
-    let tmp=link.split('/')
-    let bid=tmp.pop()
-    if(bid){
+    let tmp = link.split('/')
+    let bid = tmp.pop()
+    if (bid) {
         return bid
-    }else{
+    } else {
         return tmp.pop()
     }
 }
 /**
  * 从响应中截取视频url
- * @param str 
- * @returns 
+ * @param str
+ * @returns
  */
-export function  getVideoUrlByRes(str:string){
-        const res=str.match(/readyVideoUrl:\s*\'((https?:\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]))/)
-        return res[1]
+export function getVideoUrlByRes(str: string) {
+    const res = str.match(
+        /readyVideoUrl:\s*\'((https?:\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]))/
+    )
+    return res[1]
 }
-export const getBBVideoSrc=async(link:string)=>{
-    const api=`
+export const getBBVideoSrc = async (link: string) => {
+    const api = `
     curl ${link} -L -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'  --compressed
     `
-    const res=await request(api)
-    return getVideoUrlByRes(res.data) 
+    const res = await request(api)
+    return getVideoUrlByRes(res.data)
 }
 
-export const  getBBUserCookie=async()=>{
-    const res = await query<UserItem[]>('SELECT * from `bb-user` WHERE `username` = ?', ['huangyangteng'])
+export const getBBUserCookie = async () => {
+    const res = await query<UserItem[]>(
+        'SELECT * from `bb-user` WHERE `username` = ?',
+        ['huangyangteng']
+    )
     return res[0].cookie
 }
-export const getBBVideoInfo=async(bid:string)=>{
+export const getBBVideoInfo = async (bid: string) => {
     // const cookie=await getBBUserCookie()
-    const api=`
+    const api = `
     curl 'https://api.bilibili.com/x/web-interface/view?bvid=${bid}' \
   -H 'authority: api.bilibili.com' \
   -H 'pragma: no-cache' \
@@ -62,5 +67,4 @@ export const getBBVideoInfo=async(bid:string)=>{
   --compressed
     `
     return request(api)
-
 }

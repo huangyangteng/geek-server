@@ -17,7 +17,13 @@ content-type:application/json
 POST http://localhost:22222/watch/add HTTP/1.1
 content-type:application/json
 
-{"link":"https://www.bilibili.com/video/BV1Mg411g7C8","type":"letter"}
+{"link":"https://www.bilibili.com/video/BV1U7411a7xG/?spm_id_from=333.788.recommend_more_video.9","type":"english"}
+
+### 添加bb视频-短链接
+POST http://localhost:22222/watch/add HTTP/1.1
+content-type:application/json
+
+{"link":"https://b23.tv/UIvtwIB","type":"english"}
 
 
 ### 添加acfun视频
