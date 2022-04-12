@@ -7,6 +7,7 @@ import {
     getBBVideoSrc,
     getVideoUrlByRes,
     getBBVideoInfo,
+    handleBBShortLink,
 } from '../tools/blibli'
 import { getRes, readFileAndParse, walkDir, getExt } from '../tools/index'
 import { generateResource, getOutput, getCodec } from '../tools/watch'
@@ -72,7 +73,7 @@ router.get('/', async (ctx) => {
 })
 router.get('/bb-list', async (ctx) => {
     const res = await query<WatchBBItem[]>('SELECT * from `bb-video`')
-    ctx.body = getRes<WatchBBItem[]>(2000, res)
+    ctx.body = getRes<WatchBBItem[]>(2000, res.reverse())
 })
 
 router.get('/query', async (ctx) => {
@@ -96,10 +97,13 @@ router.get('/query', async (ctx) => {
 })
 
 router.post('/add', async (ctx) => {
-    const { link, type, from = 'bb' } = ctx.request.body
-    console.log(ctx.request.body)
+    let { link, type, from = 'bb' } = ctx.request.body
     let req
     if (from === 'bb') {
+        if (link.includes('b23.tv')) {
+            //短链接
+            link = await handleBBShortLink(link)
+        }
         const bid = getBBVideoId(link)
         let res = await getBBVideoInfo(bid)
         let { title, pic } = res.data.data
@@ -111,15 +115,15 @@ router.post('/add', async (ctx) => {
             poster: pic,
             from: 'bb',
         }
-    }else if(from==='acfun'){
-        const {title,pic} = await getAcVideoInfo(
+    } else if (from === 'acfun') {
+        const { title, pic } = await getAcVideoInfo(
             ctx.request.body.link,
             ctx.request.body.onlySrc
         )
         req = {
             link,
             type,
-            bid:getBBVideoId( ctx.request.body.link),
+            bid: getBBVideoId(ctx.request.body.link),
             name: title,
             poster: pic,
             from: 'acfun',
@@ -128,15 +132,16 @@ router.post('/add', async (ctx) => {
     const insertInfo = await query<OkPacket>('INSERT INTO `bb-video` SET?', req)
     ctx.body = getRes<number>(2000, insertInfo.insertId)
 })
-router.post('/delete',async (ctx)=>{
-    const {ids}=ctx.request.body
-    if(ids.length===0){
-        ctx.body = getRes<string>(2000,'affectedRows:0' )
-        return 
+router.post('/delete', async (ctx) => {
+    const { ids } = ctx.request.body
+    if (ids.length === 0) {
+        ctx.body = getRes<string>(2000, 'affectedRows:0')
+        return
     }
-    const deleteInfo=await query<OkPacket>('DELETE FROM `bb-video` WHERE id IN '+`(${ids.join(',')})`,)
-    ctx.body = getRes<string>(2000,'affectedRows:'+deleteInfo.affectedRows )
+    const deleteInfo = await query<OkPacket>(
+        'DELETE FROM `bb-video` WHERE id IN ' + `(${ids.join(',')})`
+    )
+    ctx.body = getRes<string>(2000, 'affectedRows:' + deleteInfo.affectedRows)
 })
-
 
 export default router.routes()

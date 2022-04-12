@@ -1,10 +1,24 @@
 import { request } from "."
 import query from "../db/mysql"
 import { UserItem } from '../types/userTypes';
-
+export const handleBBShortLink=async(link:string)=>{
+    // 请求
+    const linkRes=await request(`curl ${link}`)
+    console.log('linkRes',linkRes)
+    const reg=/https?:\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/
+    let videoLink=linkRes.data.match(reg)[0]
+    videoLink=videoLink.split('?')[0]
+    return videoLink
+}
 export function getBBVideoId(link: string) {
     link = link.split('?')[0]
-    return link.split('/').pop()
+    let tmp=link.split('/')
+    let bid=tmp.pop()
+    if(bid){
+        return bid
+    }else{
+        return tmp.pop()
+    }
 }
 /**
  * 从响应中截取视频url
