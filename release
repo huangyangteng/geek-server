@@ -1,0 +1,47 @@
+#!/usr/bin/env node
+
+const SERVER=new Map([
+    ['189',{host:'111.229.14.189',port:22,username:'root',  privateKey: require('fs').readFileSync('/Users/h/.ssh/id_dsa') }],
+    ['42',{host:'10.1.69.42'}],
+    
+])
+const shell = require('shelljs')
+const Client = require('ssh2').Client
+const {log}=console
+;(function(){
+    // 获取传入的参数，决定发送到哪个服务器
+    const [nodeEnv, dir, ...args] = process.argv
+    // 如果没有传入，默认选远程服务器列表中的第一个
+    const serverNo = args.length == 0 ? SERVER.keys().next().value : args[0]
+    const server=SERVER.get(serverNo)
+    if(!server){
+        throw new Error('服务器不存在')
+    }
+    // 先把文件传到服务器
+    shell.exec('sh publish.sh')
+    // 然后执行重启服务器的shell命令
+    const conn = new Client()
+    conn.on('ready',()=>{
+        console.log('Client::ready')
+        conn.sftp((err,sftp)=>{
+            console.log('sftp连接成功')
+            if(err)throw err
+            const scripts=`cd /root/webapps/geek-server && npm i && pm2 restart server`
+            conn.exec(scripts,(err,stream)=>{
+                if(err)throw err
+                stream
+                .on('close', function(args) {
+                    console.log('close', args)
+                    if (args == 0) {
+                        log('success!')
+                    }
+                    conn.end()
+                })
+                .on('data', function(data) {
+                    console.log('data', data.toString())
+                })
+            })
+        })
+    }).connect(server)
+
+}())

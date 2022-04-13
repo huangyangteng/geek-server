@@ -1,3 +1,6 @@
 ### 查询
 GET http://localhost:22222/util/bdy/video/xxx
 
+### see
+GET http://localhost:22222/util/see?key=怪奇物语
+

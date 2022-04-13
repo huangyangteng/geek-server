@@ -135,4 +135,11 @@ router.get('/list',async (ctx)=>{
     ctx.body=list
 })
 
+
+router.get('/see',async (ctx)=>{
+    const {key}=ctx.request.query
+    console.log(key)
+    ctx.body=getRes<string>(2000,key)
+})
+
 export default router.routes()
