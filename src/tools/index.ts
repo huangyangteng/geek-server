@@ -1,7 +1,7 @@
-import dayjs = require('dayjs');
+import dayjs = require('dayjs')
 import * as fs from 'fs'
 import * as shell from 'shelljs'
-import { RequestRes } from '../types/index';
+import { RequestRes } from '../types/index'
 /**
  *
  * @param code 2000|5000
@@ -13,7 +13,7 @@ export function getRes<T>(code: number, data: T[] | T | string) {
     return JSON.stringify({
         code,
         desc,
-        data
+        data,
     })
 }
 
@@ -52,7 +52,7 @@ export function isDir(path: string) {
 export function walkDir(dir: string) {
     let results: string[] = []
     const list = fs.readdirSync(dir)
-    list.forEach(function(file) {
+    list.forEach(function (file) {
         file = dir + '/' + file
         const stat = fs.statSync(file)
         if (stat && stat.isDirectory()) {
@@ -67,59 +67,92 @@ export function walkDir(dir: string) {
 }
 
 export function getExt(filename: string) {
-    return filename
-        .split('.')
-        .pop()
-        .toLowerCase()
+    return filename.split('.').pop().toLowerCase()
 }
 
-export const  request=async(api:string):Promise<RequestRes>=>{
-    return new Promise((resolve)=>{
-        shell.exec(api,{silent:true},(code, output, stderr)=>{
-            if(code===0){//请求成功
+export const request = async (api: string): Promise<RequestRes> => {
+    return new Promise((resolve) => {
+        shell.exec(api, { silent: true }, (code, output, stderr) => {
+            if (code === 0) {
+                //请求成功
                 // 如果json解析失败，返回原始数据
-                try{
+                try {
                     resolve({
                         code,
-                        data:JSON.parse(output),
+                        data: JSON.parse(output),
                     })
-                }catch(error){
+                } catch (error) {
                     resolve({
                         code,
-                        data:output,
+                        data: output,
                     })
                 }
-               
-            }else{
-                resolve( {
+            } else {
+                resolve({
                     code,
-                    data:stderr
+                    data: stderr,
                 })
             }
         })
     })
-    
-
 }
-export function sleep(ms:number) {
+export function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-export  function toHump(name:string) {
-    return name.replace(/\_(\w)/g, function(all, letter){
-        return letter.toUpperCase();
-    });
+export function toHump(name: string) {
+    return name.replace(/\_(\w)/g, function (all, letter) {
+        return letter.toUpperCase()
+    })
 }
-export function objToHump<T>(obj: Record<string, any>){
-    let newObj: Record<string, any>={}
-    for(let key in obj){
-        newObj[toHump(key)]=obj[key]    
+export function objToHump<T>(obj: Record<string, any>) {
+    let newObj: Record<string, any> = {}
+    for (let key in obj) {
+        newObj[toHump(key)] = obj[key]
     }
     return newObj
 }
-export function arrayToHump<T>(arr:T[]){
-    return arr.map(item=>objToHump(item)) as T[]
+export function arrayToHump<T>(arr: T[]) {
+    return arr.map((item) => objToHump(item)) as T[]
 }
-export function formatTime(time:string,formatType='YYYY-MM-DD hh:mm:ss'){
+export function formatTime(time: string, formatType = 'YYYY-MM-DD hh:mm:ss') {
     return dayjs(time).format(formatType)
+}
+// 获取当前时间
+export function getNow() {
+    return dayjs().format('YYYY-MM-DD hh:mm:ss')
+}
+
+//下划线转驼峰
+export function convertToHump(data: Record<string, any>): any {
+    if (typeof data !== 'object' || !data || data instanceof Date) return data
+    // 处理数组类型
+    if (Array.isArray(data)) {
+        return data.map((item) => convertToHump(item))
+    }
+
+    let newObj: Record<string, any> = {}
+    for (const key in data) {
+        if (Object.prototype.hasOwnProperty.call(data, key)) {
+            let newKey = key.replace(/_([a-z])/g, (res) => res[1].toUpperCase())
+            newObj[newKey] = convertToHump(data[key])
+        }
+    }
+    return newObj
+}
+//驼峰转下划线
+export function convertToUnderLine(data: Record<string, any>): any {
+    if (typeof data !== 'object' || !data || data instanceof Date) return data
+    if (Array.isArray(data)) {
+        return data.map((item) => convertToUnderLine(item))
+    }
+
+    let newObj: Record<string, any> = {}
+    for (let key in data) {
+        let newKey = key.replace(/([A-Z])/g, (res) => {
+            return '_' + res.toLowerCase()
+        })
+        newObj[newKey] = convertToUnderLine(data[key])
+    }
+    return newObj
 }

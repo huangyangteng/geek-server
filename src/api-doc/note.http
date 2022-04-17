@@ -1,0 +1,21 @@
+### 查询
+GET http://localhost:22222/note/6 HTTP/1.1
+
+
+### 新增
+POST http://localhost:22222/note/ HTTP/1.1
+content-type:application/json
+
+{"value":"吾愿吾亲爱之青年，生于青春死于青春","userId":6}
+
+### 修改
+PUT http://localhost:22222/note HTTP/1.1
+content-type:application/json
+
+{"id":8,"userId":6,"value":"我查","userId":6}
+
+### 删除
+POST http://localhost:22222/note/delete HTTP/1.1
+content-type:application/json
+
+{"id":"37,28"}

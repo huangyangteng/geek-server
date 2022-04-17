@@ -8,6 +8,7 @@ import watchRouter from './watch'
 import userRouter from './user'
 import musicRouter from './music'
 import juejinRouter from './juejin'
+import NoteRouter from './note'
 const apiRouter = new Router()
 apiRouter.use('/project', ProjectRouter)
 apiRouter.use('/history', history)
@@ -17,4 +18,5 @@ apiRouter.use('/watch', watchRouter)
 apiRouter.use('/user', userRouter)
 apiRouter.use('/music', musicRouter)
 apiRouter.use('/juejin', juejinRouter)
+apiRouter.use('/note', NoteRouter)
 export default apiRouter.routes()
