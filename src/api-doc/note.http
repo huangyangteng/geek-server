@@ -1,12 +1,23 @@
 ### 查询
 GET http://localhost:22222/note/6 HTTP/1.1
 
-
-### 新增
+### 新增-不带链接
 POST http://localhost:22222/note/ HTTP/1.1
 content-type:application/json
 
-{"value":"吾愿吾亲爱之青年，生于青春死于青春","userId":6}
+{"value":"吾爱无JFJF就","userId":6}
+
+### 新增-带链接
+POST http://localhost:22222/note/ HTTP/1.1
+content-type:application/json
+
+{"value":"`jf中文中文https://www.bilibili.com/video/BV1164y1y7gx  https://weread.qq.com/web/reader/f92320905788edf923e7e40`","userId":6}
+
+### 新增-带链接-测试微信
+POST http://localhost:22222/note/ HTTP/1.1
+content-type:application/json
+
+{"value":"https://mp.weixin.qq.com/s/SwOwhlECiKIhFlHuR-6_iQ","userId":6}
 
 ### 修改
 PUT http://localhost:22222/note HTTP/1.1

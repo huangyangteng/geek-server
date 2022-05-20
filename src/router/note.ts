@@ -11,14 +11,21 @@ import {
 import query from '../db/mysql'
 import { OkPacket } from '../types/index'
 import { AddNotePayloadType, NoteItem } from '../types/note'
+import { handleInfoLink } from '../tools/note'
 
 // add
 router.post('/', async (ctx) => {
+    let value=ctx.request.body.value
+    value=await handleInfoLink(value)
+    // console.log(value)
+    // debugger
     const req: AddNotePayloadType = {
         ...ctx.request.body,
         createDate: getNow(),
         updateDate: getNow(),
+        value
     }
+
     if (!req.value && !req.userId) {
         ctx.body = getRes<string>(5000, '请求参数不完整')
         return

@@ -8,6 +8,7 @@ import {
     getVideoUrlByRes,
     getBBVideoInfo,
     handleBBShortLink,
+    getHDLink,
 } from '../tools/blibli'
 import { getRes, readFileAndParse, walkDir, getExt } from '../tools/index'
 import { generateResource, getOutput, getCodec } from '../tools/watch'
@@ -26,24 +27,31 @@ const DEFAULT_DIR = '/Users/h/Desktop/learnvideo'
 // 解析blibli的视频
 router.all('/bb', async (ctx) => {
     const bid = getBBVideoId(ctx.request.body.link)
+    // const aid=ctx.request.body.aid
     const onlySrc = ctx.request.body.onlySrc
     // 只返回视频播放的src
-    const videoSrc = await getBBVideoSrc(ctx.request.body.link)
-    let videoInfoRes
+    // const videoSrc = await getBBVideoSrc(ctx.request.body.link)
+    let videoInfoRes:any
     let responseBody = {
         bid: bid,
-        src: videoSrc,
+        // src: videoSrc,
     }
     // 如果需要返回视频列表等信息，返回视频列表
     if (!onlySrc) {
         videoInfoRes = await getBBVideoInfo(bid)
+        const res=await getHDLink(bid,videoInfoRes.data.data.cid)
         responseBody = Object.assign(responseBody, {
             ...videoInfoRes.data.data,
+            ...res,
         })
     }
-
-    // console.log('videoInfo',videoInfo)
     ctx.body = getRes(2000, responseBody)
+})
+
+router.all('/bb-parse',async(ctx)=>{
+    const res=await getHDLink(ctx.request.body.bid,ctx.request.body.cid)
+    ctx.body = getRes(2000, res)
+
 })
 router.post('/acfun', async (ctx) => {
     const res = await getAcVideoInfo(

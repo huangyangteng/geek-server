@@ -6,6 +6,13 @@ content-type:application/json
 
 {"link":"https://www.bilibili.com/video/BV1Mg411g7C8?p=2","onlySrc":0}
 
+### 解析blibli视频-高清视频
+POST http://localhost:22222/watch/bb-parse HTTP/1.1
+content-type:application/json
+
+{"bid":"BV1t94y1f7Ex","cid":"561951189"}
+
+
 ### 解析acfun视频
 POST http://localhost:22222/watch/acfun HTTP/1.1
 content-type:application/json

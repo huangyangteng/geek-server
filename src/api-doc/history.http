@@ -1,15 +1,21 @@
 ### 查询
-GET http://localhost:22222/history?userId=6&startTime=2021-12-18 00:00:00&endTime=2023-12-20 00:00:00
+GET http://localhost:22222/history?userId=6&type=column
 
 
 ### 添加记录
 POST  http://localhost:22222/history/ HTTP/1.1
 content-type:application/json
 
-{"userId":1,"itemId":"aaa1","type":"column","info":"11aaaa1","time":"2021-12-18 18:00:01"}
+{"userId":1,"itemId":"aaaaaa", "groupId":"11", "type":"column","info":"11aaaa1","time":"2021-12-18 18:00:01"}
 
-### 更新记录
+### 更新记录-column
 POST  http://localhost:22222/history/ HTTP/1.1
 content-type:application/json
 
-{"itemId":"70421575a18625177608","type":"column","info":"hello-update","time":"2021-12-18 18:00:01"}
+{"userId":1,"itemId":"aaa1","type":"column","info":"hello-update","time":"2021-12-18 18:00:01"}
+
+### 更新记录-video
+POST  http://localhost:22222/history/ HTTP/1.1
+content-type:application/json
+
+{"userId":6,"itemId":561951189,"groupId":"BV1t94y1f7Ex","type":"video","info":"{\"currentTime\":129.931042,\"courseTitle\":\"志远开源二期 付费课程\",\"videoName\":\"03.Network\"}"}

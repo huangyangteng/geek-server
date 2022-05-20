@@ -3,7 +3,8 @@ const MYSQL_CONFIG = require('./config')
 let config = {
     ...MYSQL_CONFIG,
     port:3306,
-    multipleStatements: true//允许多条sql同时执行
+    multipleStatements: true,//允许多条sql同时执行
+    charset:'utf8mb4'
 };
 let pool = mysql.createPool(config);
 // let query = (sql:string, values:any):Promise<any> => {
