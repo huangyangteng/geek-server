@@ -9,6 +9,7 @@ import {
     getBBVideoInfo,
     handleBBShortLink,
     getHDLink,
+    getHDLink2,
 } from '../tools/blibli'
 import { getRes, readFileAndParse, walkDir, getExt } from '../tools/index'
 import { generateResource, getOutput, getCodec } from '../tools/watch'
@@ -105,7 +106,7 @@ router.get('/query', async (ctx) => {
 })
 
 router.post('/add', async (ctx) => {
-    let { link, type, from = 'bb' } = ctx.request.body
+    let { link, type, from = 'bb',type2='' } = ctx.request.body
     let req
     if (from === 'bb') {
         if (link.includes('b23.tv')) {
@@ -122,6 +123,7 @@ router.post('/add', async (ctx) => {
             name: title,
             poster: pic,
             from: 'bb',
+            type2
         }
     } else if (from === 'acfun') {
         const { title, pic } = await getAcVideoInfo(
@@ -135,6 +137,7 @@ router.post('/add', async (ctx) => {
             name: title,
             poster: pic,
             from: 'acfun',
+            type2
         }
     }
     const insertInfo = await query<OkPacket>('INSERT INTO `bb-video` SET?', req)

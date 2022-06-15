@@ -30,7 +30,7 @@ content-type:application/json
 POST http://localhost:22222/watch/add HTTP/1.1
 content-type:application/json
 
-{"link":"https://b23.tv/UIvtwIB","type":"english"}
+{"link":"https://www.bilibili.com/video/BV17t4y1W744","type":"graduate","type2":"methodology","from":"bb"}
 
 
 ### 添加acfun视频
