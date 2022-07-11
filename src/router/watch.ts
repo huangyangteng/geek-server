@@ -155,4 +155,11 @@ router.post('/delete', async (ctx) => {
     ctx.body = getRes<string>(2000, 'affectedRows:' + deleteInfo.affectedRows)
 })
 
+router.put('/update',async ctx=>{
+    let {id}=ctx.request.body
+    const res = await query<WatchItemContent[]>('SELECT * from `bb-video` WHERE `id` = ?', [id])
+    console.log(res)
+
+    ctx.body = getRes<number>(2000, id)
+})
 export default router.routes()

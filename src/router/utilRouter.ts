@@ -9,6 +9,7 @@ import * as path from 'path'
 import { handleTaobaoData } from '../tools/taobao/handleTaobaoData.js'
 import dayjs = require('dayjs');
 import { createTextChangeRange, createTextSpan } from 'typescript';
+import { fetchDict, parseDict } from '../tools/haici';
 function getName(path: string) {
     return path.split('/').pop()
 }
@@ -140,6 +141,15 @@ router.get('/see',async (ctx)=>{
     const {key}=ctx.request.query
     console.log(key)
     ctx.body=getRes<string>(2000,key)
+})
+
+// 解析海词词典
+router.get('/translate',async (ctx)=>{
+    const {word}=ctx.request.query
+    console.log(word)
+    const doc=await fetchDict(word)
+    const res=parseDict(doc)
+    ctx.body=getRes<any>(2000,res)
 })
 
 export default router.routes()

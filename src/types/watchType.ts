@@ -1,6 +1,7 @@
 export interface WatchItemContent {
     id:String,
     type:String,
+    type2?:string
     list:[]
 }
 

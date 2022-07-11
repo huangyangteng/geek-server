@@ -39,6 +39,12 @@ content-type:application/json
 
 {"link":"https://www.acfun.cn/v/ac31616020","type":"gradute","from":"acfun"}
 
+### 修改
+PUT http://localhost:22222/watch/update HTTP/1.1
+content-type:application/json
+
+{"id":86,"type2":"408"}
+
 ### 删除视频
 POST http://localhost:22222/watch/delete HTTP/1.1
 content-type:application/json
