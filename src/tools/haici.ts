@@ -89,16 +89,18 @@ export function parseDict(html:string) {
         return arr
     }
     const getUsage=()=>{
-		let arr:string[]=[]
+		let arr:any[]=[]
 		let child=$('.layout.ess').children()
-		child.each(function(index){
-			if($(this)['0'].name==='span'){
-				arr.push(replaceLF($(this).text()))
+		child.each(function(){
+            //@ts-ignore
+            let obj={title:'',list:[]}
+			if($(this)[0].name==='span'){
+                arr.push({type:'title',content:replaceLF($(this).text())})
 			}
-			if($(this)['0'].name==='ol'){
-				// console.log( $(this).children())
+            //@ts-ignore
+			if($(this)[0].name==='ol'){
 				$(this).children().each(function(){
-					arr.push(replaceLF($(this).text()))
+                    arr.push({type:'usage',content:replaceLF($(this).text())})
 				})
 			}
 			
@@ -121,7 +123,7 @@ export function parseDict(html:string) {
         meaning: getMeaning(),
         meaningTotal:getMeaningTotal(),
         examples: examples,
-        getUsage:getUsage()
+        usages:getUsage()
     }
     // console.log(obj)
 	return obj
