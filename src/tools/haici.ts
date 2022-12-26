@@ -88,6 +88,9 @@ export function parseDict(html:string) {
         })
         return arr
     }
+    const getSoundMark=()=>{
+        return replaceLF($('.phonetic').text())
+    }
     const getUsage=()=>{
 		let arr:any[]=[]
 		let child=$('.layout.ess').children()
@@ -109,20 +112,13 @@ export function parseDict(html:string) {
 	
 	}
 
-	// 最终返回结果
-	let examples=getExamples()
-	// let question:any=[]
-	// examples.forEach((item:any)=>{
-	// 	if(!item.includes('用作')){
-	// 		let list=item.split('.')
-	// 		question.push(list[0])
-	// 	}
-	// })
+	
     let obj = {
+        soundmark:getSoundMark(),
         level: getLevel(),
         meaning: getMeaning(),
         meaningTotal:getMeaningTotal(),
-        examples: examples,
+        examples: getExamples(),
         usages:getUsage()
     }
     // console.log(obj)

@@ -69,7 +69,21 @@ export function walkDir(dir: string) {
 export function getExt(filename: string) {
     return filename.split('.').pop().toLowerCase()
 }
+export function getParams(link: string) {
+    let str
+    if (link.includes('?')) {
+        str = link.split('?')[1]
+    }
 
+    return str.split('&').reduce(function (prev: any, curr: any) {
+        let p = curr.split('=')
+        prev[decodeURIComponent(p[0])] = decodeURIComponent(p[1])
+        return prev
+    }, {})
+}
+export function isNumeric(value: any) {
+    return /^-?\d+$/.test(value)
+}
 export const request = async (api: string): Promise<RequestRes> => {
     return new Promise((resolve) => {
         shell.exec(api, { silent: true }, (code, output, stderr) => {
@@ -120,7 +134,7 @@ export function formatTime(time: string, formatType = 'YYYY-MM-DD hh:mm:ss') {
 }
 // 获取当前时间
 export function getNow() {
-    return dayjs().format('YYYY-MM-DD hh:mm:ss')
+    return dayjs().format('YYYY-MM-DD HH:mm:ss')
 }
 
 //下划线转驼峰

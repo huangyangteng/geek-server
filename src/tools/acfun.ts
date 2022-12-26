@@ -1,8 +1,8 @@
 import * as cheerio from 'cheerio'
 import { request } from '.';
 import { writeFile } from './index';
-// import * as path from 'path';
-// import * as  fs from 'fs';
+import * as path from 'path';
+import * as  fs from 'fs';
 
 
 function getPages($:any) {
@@ -31,8 +31,13 @@ function getPages($:any) {
 
 function getVideoInfo(str:string) {
     //[version:'',adaptationSet:[{id:0,duration:2000,representation:[{id:1,url:''},{id:2,url:''}]}]]
-    var reg = /ksplayJson":"(\{.*\})","ksPlayJsonHevc/gim
-    let res = reg.exec(str)
+    var reg_old = /ksplayJson":"(\{.*\})","ksPlayJsonHevc/gim
+
+    var reg_new = /ksplayJson":"(\{.*\})","/gi
+    let res = reg_old.exec(str)
+    if(!res){
+        res=reg_new.exec(str)
+    }
     // console.log( res[1][0])
     // console.log(res.length,JSON.parse(JSON.parse(`"${res[1]}"`)) )
     const videoInfo=JSON.parse(JSON.parse(`"${res[1]}"`))
@@ -40,8 +45,13 @@ function getVideoInfo(str:string) {
 }
 function getSpareSrc(str:string){
      //[version:'',adaptationSet:[{id:0,duration:2000,representation:[{id:1,url:''},{id:2,url:''}]}]]
-     var reg = /ksplayJson":"(\{.*\})","ksPlayJsonHevc/gim
-     let res = reg.exec(str)
+     var reg_old = /ksplayJson":"(\{.*\})","ksPlayJsonHevc/gim
+
+     var reg_new = /ksplayJson":"(\{.*\})","/gi
+     let res = reg_old.exec(str)
+     if(!res){
+         res=reg_new.exec(str)
+     }
      // console.log( res[1][0])
      // console.log(res.length,JSON.parse(JSON.parse(`"${res[1]}"`)) )
      const videoInfo=JSON.parse(JSON.parse(`"${res[1]}"`))
@@ -60,8 +70,9 @@ export const getAcVideoInfo=async(link:string,onlySrc:boolean|undefined)=>{
         curl ${link}
     `
     const res=await request(api)
-    // const FILES_PATH = path.join(__dirname, '../data/test.json')
-    // fs.writeFileSync(FILES_PATH, res.data)
+    // console.log(res)
+    const FILES_PATH = path.join(__dirname, '../data/test.json')
+    fs.writeFileSync(FILES_PATH, res.data)
     const $ = cheerio.load(res.data)
     const str=$.html()
     return {

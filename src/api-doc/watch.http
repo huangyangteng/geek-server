@@ -1,10 +1,17 @@
 
 
-### 解析blibli视频
+### 解析blibli视频-单个视频
 POST http://localhost:22222/watch/bb HTTP/1.1
 content-type:application/json
 
-{"link":"https://www.bilibili.com/video/BV1Mg411g7C8?p=2","onlySrc":0}
+{"link":"https://www.bilibili.com/video/BV1bd4y1m72V","onlySrc":0}
+
+### 解析blibli视频-合集
+POST http://localhost:22222/watch/bb HTTP/1.1
+content-type:application/json
+
+{"link":"https://space.bilibili.com/279193889/channel/collectiondetail?sid=26389","onlySrc":0}
+
 
 ### 解析blibli视频-高清视频
 POST http://localhost:22222/watch/bb-parse HTTP/1.1
@@ -17,10 +24,16 @@ content-type:application/json
 POST http://localhost:22222/watch/acfun HTTP/1.1
 content-type:application/json
 
-{"link":"https://www.acfun.cn/v/ac31616020","onlySrc":0}
+# {"link":"https://www.acfun.cn/v/ac39517563","onlySrc":0}
+ {"link":"https://www.acfun.cn/v/ac31616020","onlySrc":0}
 
+### 添加blibli视频合集
+POST http://localhost:22222/watch/add HTTP/1.1
+content-type:application/json
 
-### 添加bb视频
+{"link":"https://space.bilibili.com/108569246/channel/seriesdetail?sid=2133073","type":"graduate","type2":"politics"}
+
+### 添加bb视频(单个)
 POST http://localhost:22222/watch/add HTTP/1.1
 content-type:application/json
 
@@ -37,7 +50,7 @@ content-type:application/json
 POST http://localhost:22222/watch/add HTTP/1.1
 content-type:application/json
 
-{"link":"https://www.acfun.cn/v/ac31616020","type":"gradute","from":"acfun"}
+{"link":"https://www.acfun.cn/v/ac31616020","type":"graduate","from":"acfun"}
 
 ### 修改
 PUT http://localhost:22222/watch/update HTTP/1.1

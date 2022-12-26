@@ -9,3 +9,7 @@ POST http://localhost:22222/juejin/star HTTP/1.1
 content-type:application/json
 
 {"id":"7042157518625177608"}
+
+
+### 签到
+GET http://localhost:22222/juejin/qiandao HTTP/1.1

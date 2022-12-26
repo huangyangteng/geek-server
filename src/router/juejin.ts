@@ -1,8 +1,9 @@
 import * as Router from 'koa-router'
 import { getRes, sleep } from '../tools/index';
-import { getUserArticles, starArticle, viewArticle } from '../tools/juejin/juejin-api';
+import { getUserArticles, starArticle, viewArticle, signIn } from '../tools/juejin/juejin-api';
 import query from '../db/mysql';
 import { JuejinUserInfo } from '../types/juejin';
+const schedule = require('node-schedule');
 const router = new Router()
 interface CookieItem{
     id:number
@@ -47,6 +48,18 @@ router.post('/star',async (ctx)=>{
     }
     ctx.body=getRes(2000,'ok')
 
+})
+
+const  scheduleTask = ()=>{
+    // 每天早上7点执行
+    schedule.scheduleJob({second:0,minute:5,hour:7},()=>{
+        signIn()
+    });
+}
+router.get('/qiandao',async (ctx)=>{
+    // scheduleTask()
+    signIn()
+    ctx.body=getRes(2000,'ok')
 })
 
 export default router.routes()

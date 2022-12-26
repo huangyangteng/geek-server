@@ -10,6 +10,7 @@ import { handleTaobaoData } from '../tools/taobao/handleTaobaoData.js'
 import dayjs = require('dayjs');
 import { createTextChangeRange, createTextSpan } from 'typescript';
 import { fetchDict, parseDict } from '../tools/haici';
+import { getFundInfo } from '../tools/invest';
 function getName(path: string) {
     return path.split('/').pop()
 }
@@ -37,7 +38,10 @@ router.get("/bdy(.*)",async (ctx)=>{
     ctx.body=JSON.stringify({code:'ok'})
 })
 
-
+router.get('/invest',async(ctx)=>{
+    const res=await getFundInfo()
+    ctx.body=getRes<any>(2000,res)
+})
 
 // 上传
 const FILES_PATH = path.join(__dirname, '../data/files.json')

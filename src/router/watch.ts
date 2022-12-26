@@ -9,9 +9,18 @@ import {
     getBBVideoInfo,
     handleBBShortLink,
     getHDLink,
-    getHDLink2,
+    getAddParams,
+    getSid,
+    getBBUserId,
+    getCidByBid
 } from '../tools/blibli'
-import { getRes, readFileAndParse, walkDir, getExt } from '../tools/index'
+import {
+    getRes,
+    readFileAndParse,
+    walkDir,
+    getExt,
+  
+} from '../tools/index'
 import { generateResource, getOutput, getCodec } from '../tools/watch'
 import {
     WatchItemContent,
@@ -20,6 +29,7 @@ import {
 } from '../types/watchType'
 import { OkPacket } from '../types/index'
 import { getAcVideoInfo } from '../tools/acfun'
+import { getVideoCollection } from '../tools/blibli';
 
 const PROJECT_PATH = path.join(__dirname, '../data/watch.json')
 
@@ -27,12 +37,30 @@ const DEFAULT_DIR = '/Users/h/Desktop/learnvideo'
 
 // 解析blibli的视频
 router.all('/bb', async (ctx) => {
+    const link=ctx.request.body.link
+    //----------------------- 处理合集逻辑
+    const sid=getSid(link)
+    if(sid){//合集
+        let userId=getBBUserId(link)
+        const collectionRes=await getVideoCollection(sid,userId)
+        if(collectionRes.code==0){
+            let {meta,archives}=collectionRes.data.data
+            ctx.body = getRes(2000, {
+                isCollection:true,
+                title:meta.name,
+                pages:archives
+                
+            })
+        }
+        return 
+    }
+    // --------单个视频的逻辑
     const bid = getBBVideoId(ctx.request.body.link)
     // const aid=ctx.request.body.aid
     const onlySrc = ctx.request.body.onlySrc
     // 只返回视频播放的src
     // const videoSrc = await getBBVideoSrc(ctx.request.body.link)
-    let videoInfoRes:any
+    let videoInfoRes: any
     let responseBody = {
         bid: bid,
         // src: videoSrc,
@@ -40,7 +68,7 @@ router.all('/bb', async (ctx) => {
     // 如果需要返回视频列表等信息，返回视频列表
     if (!onlySrc) {
         videoInfoRes = await getBBVideoInfo(bid)
-        const res=await getHDLink(bid,videoInfoRes.data.data.cid)
+        const res = await getHDLink(bid, videoInfoRes.data.data.cid)
         responseBody = Object.assign(responseBody, {
             ...videoInfoRes.data.data,
             ...res,
@@ -49,10 +77,17 @@ router.all('/bb', async (ctx) => {
     ctx.body = getRes(2000, responseBody)
 })
 
-router.all('/bb-parse',async(ctx)=>{
-    const res=await getHDLink(ctx.request.body.bid,ctx.request.body.cid)
+router.all('/bb-parse', async (ctx) => {
+    let bid=ctx.request.body.bid
+    let cid=ctx.request.body.cid
+    let isCollection=ctx.request.body.collection
+    // 处理合集的解析
+    if(isCollection){
+        bid=ctx.request.body.cid
+        cid=await getCidByBid(bid)
+    }
+    const res = await getHDLink(bid, cid)
     ctx.body = getRes(2000, res)
-
 })
 router.post('/acfun', async (ctx) => {
     const res = await getAcVideoInfo(
@@ -105,26 +140,16 @@ router.get('/query', async (ctx) => {
     }
 })
 
+
+
 router.post('/add', async (ctx) => {
-    let { link, type, from = 'bb',type2='' } = ctx.request.body
+    let { link, type, from = 'bb', type2 = '' } = ctx.request.body
     let req
     if (from === 'bb') {
-        if (link.includes('b23.tv')) {
-            //短链接
-            link = await handleBBShortLink(link)
-        }
-        const bid = getBBVideoId(link)
-        let res = await getBBVideoInfo(bid)
-        let { title, pic } = res.data.data
-        req = {
-            link,
-            type,
-            bid,
-            name: title,
-            poster: pic,
-            from: 'bb',
-            type2
-        }
+        req=await getAddParams( ctx.request.body)
+        console.log(req)
+        debugger
+
     } else if (from === 'acfun') {
         const { title, pic } = await getAcVideoInfo(
             ctx.request.body.link,
@@ -137,7 +162,7 @@ router.post('/add', async (ctx) => {
             name: title,
             poster: pic,
             from: 'acfun',
-            type2
+            type2,
         }
     }
     const insertInfo = await query<OkPacket>('INSERT INTO `bb-video` SET?', req)
@@ -155,9 +180,12 @@ router.post('/delete', async (ctx) => {
     ctx.body = getRes<string>(2000, 'affectedRows:' + deleteInfo.affectedRows)
 })
 
-router.put('/update',async ctx=>{
-    let {id}=ctx.request.body
-    const res = await query<WatchItemContent[]>('SELECT * from `bb-video` WHERE `id` = ?', [id])
+router.put('/update', async (ctx) => {
+    let { id } = ctx.request.body
+    const res = await query<WatchItemContent[]>(
+        'SELECT * from `bb-video` WHERE `id` = ?',
+        [id]
+    )
     console.log(res)
 
     ctx.body = getRes<number>(2000, id)
