@@ -47,3 +47,4 @@ export default function query<T>(sql:string, values:any=null):Promise<T>{
         })
     })
 }
+

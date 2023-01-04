@@ -12,7 +12,8 @@ import {
     getAddParams,
     getSid,
     getBBUserId,
-    getCidByBid
+    getCidByBid,
+    getBBVideoPage
 } from '../tools/blibli'
 import {
     getRes,
@@ -56,6 +57,8 @@ router.all('/bb', async (ctx) => {
     }
     // --------单个视频的逻辑
     const bid = getBBVideoId(ctx.request.body.link)
+    const page=getBBVideoPage(ctx.request.body.link)
+   
     // const aid=ctx.request.body.aid
     const onlySrc = ctx.request.body.onlySrc
     // 只返回视频播放的src
@@ -68,7 +71,7 @@ router.all('/bb', async (ctx) => {
     // 如果需要返回视频列表等信息，返回视频列表
     if (!onlySrc) {
         videoInfoRes = await getBBVideoInfo(bid)
-        const res = await getHDLink(bid, videoInfoRes.data.data.cid)
+        const res = await getHDLink(bid, videoInfoRes.data.data.cid,page)
         responseBody = Object.assign(responseBody, {
             ...videoInfoRes.data.data,
             ...res,
@@ -80,13 +83,14 @@ router.all('/bb', async (ctx) => {
 router.all('/bb-parse', async (ctx) => {
     let bid=ctx.request.body.bid
     let cid=ctx.request.body.cid
+    let page=ctx.request.body.p
     let isCollection=ctx.request.body.collection
     // 处理合集的解析
     if(isCollection){
         bid=ctx.request.body.cid
         cid=await getCidByBid(bid)
     }
-    const res = await getHDLink(bid, cid)
+    const res = await getHDLink(bid, cid,page)
     ctx.body = getRes(2000, res)
 })
 router.post('/acfun', async (ctx) => {
@@ -141,7 +145,7 @@ router.get('/query', async (ctx) => {
 })
 
 
-
+// 添加
 router.post('/add', async (ctx) => {
     let { link, type, from = 'bb', type2 = '' } = ctx.request.body
     let req
@@ -168,6 +172,7 @@ router.post('/add', async (ctx) => {
     const insertInfo = await query<OkPacket>('INSERT INTO `bb-video` SET?', req)
     ctx.body = getRes<number>(2000, insertInfo.insertId)
 })
+// 删除
 router.post('/delete', async (ctx) => {
     const { ids } = ctx.request.body
     if (ids.length === 0) {
@@ -179,15 +184,28 @@ router.post('/delete', async (ctx) => {
     )
     ctx.body = getRes<string>(2000, 'affectedRows:' + deleteInfo.affectedRows)
 })
-
+// 修改
 router.put('/update', async (ctx) => {
-    let { id } = ctx.request.body
-    const res = await query<WatchItemContent[]>(
-        'SELECT * from `bb-video` WHERE `id` = ?',
-        [id]
-    )
-    console.log(res)
+    let { ids } = ctx.request.body
+    console.log('🙂',ids)
+    let  req:WatchItemContent={
+        ...ctx.request.body
+    }
+    for(let i=0;i<ids.length;i++){
+        let id=ids[i]
+        const res = await query<WatchItemContent[]>(
+            'SELECT * from `bb-video` WHERE `id` = ?',
+            [id]
+        )
+        if(!res[0]){
+            ctx.body = getRes<string>(5000, '未找到对应的视频')
+            return 
+        }
+        let reqData=Object.assign({},res[0],req)
+        await query<OkPacket>('UPDATE `bb-video` SET type=?,type2=? WHERE id=?',[reqData.type,reqData.type2,reqData.id])
+    }
+   
 
-    ctx.body = getRes<number>(2000, id)
+    ctx.body = getRes<number>(2000, ids)
 })
 export default router.routes()

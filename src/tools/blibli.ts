@@ -2,7 +2,7 @@ import { isNumeric, request } from '.'
 import query from '../db/mysql'
 import { UserItem } from '../types/userTypes'
 import { getParams } from './index';
-
+import axios from 'axios';
 const Cookie=`session=eyJjc3JmX3Rva2VuIjoiYzc1NDA4ZjYzMjRlYjRlODhhODg2NmViNWFjMDRkZTVlNDFkNjZkNiJ9.YwMg4A.yQMeQMiK8E74Zfg1GH_dRoPu670; Hm_lvt_495c417f527bcffa6cfe018d92be1e98=1658674190,1659246492,1659443453,1661149409; Hm_lpvt_495c417f527bcffa6cfe018d92be1e98=1661149414`
 
 export const handleBBShortLink = async (link: string) => {
@@ -24,6 +24,16 @@ export function getBBVideoId(link: string) {
         return tmp.pop()
     }
 }
+export function getBBVideoPage(link: string) {
+    if (!link.includes('p=')) return 1
+    let obj = getParams(link)
+    if (obj.p) {
+        return obj.p
+    } else {
+        return 1
+    }
+}
+
 /**
  * 从响应中截取视频url
  * @param str
@@ -94,113 +104,25 @@ export function getAv(x: string) {
     }
     return (r - add) ^ xor
 }
-export const getCsrfToken = async () => {
-    const api = `
-    curl 'https://bilibili.syyhc.com/' \
-  -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9' \
-  -H 'Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7' \
-  -H 'Connection: keep-alive' \
-  -H 'Cookie: ${Cookie}' \
-  -H 'Sec-Fetch-Dest: document' \
-  -H 'Sec-Fetch-Mode: navigate' \
-  -H 'Sec-Fetch-Site: none' \
-  -H 'Sec-Fetch-User: ?1' \
-  -H 'Upgrade-Insecure-Requests: 1' \
-  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36' \
-  -H 'sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="102", "Google Chrome";v="102"' \
-  -H 'sec-ch-ua-mobile: ?0' \
-  -H 'sec-ch-ua-platform: "macOS"' \
-  --compressed
-    `
-    const res = await request(api)
 
-    const reg =
-        /<input\s*id="csrf_token"\sname="csrf_token"\s*type="hidden"\s*value="([a-zA-Z._\-0-9]+)">/g
-    try {
-        return reg.exec(res.data)[1]
-    } catch (error) {
-        console.log('error', res.data)
-    }
+const getVideoUrl=async(aid:number,p:number=1)=>{
+    const res=await axios.get(`https://api.injahow.cn/bparse/?av=${aid}&p=${p}&format=mp4&otype=json`)
+    console.log('res',res.data.url)
+    return res.data?.url
 }
 // 获取高清视频
-export const getHDLink = async (bid: string, cid: string) => {
+export const getHDLink = async (bid: string, cid: string,p?:number) => {
     const aid = getAv(bid)
-    const csrfToken = await getCsrfToken()
-    const api = `
-    curl 'https://bilibili.syyhc.com/v/play_url' \
-    -H 'Accept: application/json, text/javascript, */*; q=0.01' \
-    -H 'Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7' \
-    -H 'Cache-Control: no-cache' \
-    -H 'Connection: keep-alive' \
-    -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' \
-    -H 'Cookie: ${Cookie}' \
-    -H 'Origin: https://bilibili.syyhc.com' \
-    -H 'Pragma: no-cache' \
-    -H 'Referer: https://bilibili.syyhc.com/parser' \
-    -H 'Sec-Fetch-Dest: empty' \
-    -H 'Sec-Fetch-Mode: cors' \
-    -H 'Sec-Fetch-Site: same-origin' \
-    -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36' \
-    -H 'X-CSRFToken: ${csrfToken}' \
-    -H 'X-Requested-With: XMLHttpRequest' \
-    -H 'sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"' \
-    -H 'sec-ch-ua-mobile: ?0' \
-    -H 'sec-ch-ua-platform: "macOS"' \
-    --data 'aid=${aid}&cid=${cid}' \
-    --compressed
-    `
-    const res = await request(api)
-    console.log(res.data)
+
+    const url = await getVideoUrl(aid,p)
+    // console.log('----------',res)
     return {
-        src: res.data.durl[0].url,
+        src: url,
         aid: aid,
         cid: cid,
         bid: bid,
     }
 }
-// export const getHDLink2 = async (bid: string, cid: string) => {
-//     const aid = getAv(bid)
-//     console.log(aid, cid)
-//     const csrfToken1 = await getCsrfToken()
-//     console.log(csrfToken1)
-//     const csrfToken = csrfToken1
-//     const url = 'https://www.bilibili.com/video/BV1ma4y1L7NE?p=2'
-//     const api = `
-//     curl 'https://bilibili.syyhc.com/parser' \
-//     -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9' \
-//     -H 'Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7' \
-//     -H 'Cache-Control: no-cache' \
-//     -H 'Connection: keep-alive' \
-//     -H 'Content-Type: application/x-www-form-urlencoded' \
-//     -H 'Cookie: session=eyJjc3JmX3Rva2VuIjoiZGQ5Yzg3MzUwNjJkMDVkOGFjNzY2MWMxZTFlMDM5NzlhYjRiYTAzYyJ9.Yob66w.NTdYG8pRSYUaGTQPeZIPWZh9lKc; Hm_lvt_495c417f527bcffa6cfe018d92be1e98=1653013228; Hm_lpvt_495c417f527bcffa6cfe018d92be1e98=1653013538' \
-//     -H 'Origin: https://bilibili.syyhc.com' \
-//     -H 'Pragma: no-cache' \
-//     -H 'Referer: https://bilibili.syyhc.com/' \
-//     -H 'Sec-Fetch-Dest: document' \
-//     -H 'Sec-Fetch-Mode: navigate' \
-//     -H 'Sec-Fetch-Site: same-origin' \
-//     -H 'Sec-Fetch-User: ?1' \
-//     -H 'Upgrade-Insecure-Requests: 1' \
-//     -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36' \
-//     -H 'sec-ch-ua: " Not A;Brand";v="99", "Chromium";v="101", "Google Chrome";v="101"' \
-//     -H 'sec-ch-ua-mobile: ?0' \
-//     -H 'sec-ch-ua-platform: "macOS"' \
-//     --data-raw 'url=${url}&go=&csrf_token=${csrfToken}' \
-//     --compressed
-
-//     `
-//     const res = await request(api)
-
-//     const reg =
-//         /<source\s*src="(https?:\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|])"/
-//     console.log(res.data)
-//     return {
-//         src: reg.exec(res.data)[1],
-//         aid: aid,
-//         cid: cid,
-//         bid: bid,
-//     }
-// }
 
 
  export function getSid(link: string) {
