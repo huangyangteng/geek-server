@@ -44,6 +44,7 @@ router.post('/', async (ctx) => {
                 ]
             )
         }
+        ctx.body = getRes<string>(2000, 'update')
     } else {
         // 新增数据
         // 获取基金信息
@@ -69,8 +70,9 @@ router.post('/', async (ctx) => {
             return
         }
         await query<OkPacket>('INSERT INTO etf SET?', req)
+        ctx.body = getRes<string>(2000, 'add')
     }
-    ctx.body = getRes<string>(2000, 'success')
+   
 })
 
 router.get('/:code', async (ctx) => {

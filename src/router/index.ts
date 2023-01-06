@@ -10,6 +10,7 @@ import musicRouter from './music'
 import juejinRouter from './juejin'
 import NoteRouter from './note'
 import EftRouter from './etf'
+import JobRouter from './job'
 const apiRouter = new Router()
 apiRouter.use('/project', ProjectRouter)
 apiRouter.use('/history', history)
@@ -21,4 +22,5 @@ apiRouter.use('/music', musicRouter)
 apiRouter.use('/juejin', juejinRouter)
 apiRouter.use('/note', NoteRouter)
 apiRouter.use('/etf', EftRouter)
+apiRouter.use('/job', JobRouter)
 export default apiRouter.routes()
