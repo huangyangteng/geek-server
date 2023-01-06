@@ -9,6 +9,7 @@ import userRouter from './user'
 import musicRouter from './music'
 import juejinRouter from './juejin'
 import NoteRouter from './note'
+import EftRouter from './etf'
 const apiRouter = new Router()
 apiRouter.use('/project', ProjectRouter)
 apiRouter.use('/history', history)
@@ -19,4 +20,5 @@ apiRouter.use('/user', userRouter)
 apiRouter.use('/music', musicRouter)
 apiRouter.use('/juejin', juejinRouter)
 apiRouter.use('/note', NoteRouter)
+apiRouter.use('/etf', EftRouter)
 export default apiRouter.routes()

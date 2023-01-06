@@ -4,6 +4,9 @@ import registerRouter from './router/index'
 import * as path from 'path'
 const cors = require('koa2-cors');
 
+//启动定时任务 
+import './job/index'
+
 const app = new Koa()
 app.use(
     koaBody({
