@@ -77,6 +77,7 @@ router.post('/', async ctx => {
     const projectReq: UserItem = {
         ...ctx.request.body
     }
+    console.log('😃😃',projectReq)
     if (!projectReq.username && !projectReq.password) {
         ctx.body = getRes<string>(5000, '请求参数不完整')
         return

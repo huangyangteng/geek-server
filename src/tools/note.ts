@@ -26,10 +26,10 @@ export const handleInfoLink = async (info: string) => {
     }
 }
 export const getTitleFromLink = async (link: string) => {
-    let reqUrl = `curl ${link}`
+    let reqUrl = `curl -k ${link}`
     if (link.includes('bilibili')) {
         reqUrl = `
-        curl '${link}' \
+        curl -k '${link}' \
         -H 'authority: www.bilibili.com' \
         -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9' \
         -H 'accept-language: zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7' \

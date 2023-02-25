@@ -11,6 +11,7 @@ import juejinRouter from './juejin'
 import NoteRouter from './note'
 import EftRouter from './etf'
 import JobRouter from './job'
+import ReadRouter from './read'
 const apiRouter = new Router()
 apiRouter.use('/project', ProjectRouter)
 apiRouter.use('/history', history)
@@ -23,4 +24,5 @@ apiRouter.use('/juejin', juejinRouter)
 apiRouter.use('/note', NoteRouter)
 apiRouter.use('/etf', EftRouter)
 apiRouter.use('/job', JobRouter)
+apiRouter.use('/read', ReadRouter)
 export default apiRouter.routes()

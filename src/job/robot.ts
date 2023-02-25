@@ -1,28 +1,44 @@
 import { request } from "../tools"
-
+import dayjs = require('dayjs')
 const schedule = require('node-schedule')
 const shell=require('shelljs')
-const sendMsg = async(msg:string) => {
+export const sendMsg = async(msg:string) => {
     const api=`
-    curl https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=7693ec9b-2c69-47c5-b683-a6811e939ee5' \
-    -H 'Content-Type: application/json' \
-    -d '
-    {
-         "msgtype": "text",
-         "text": {
-             "content": ${msg}
-         }
-    }'
+    curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=7693ec9b-2c69-47c5-b683-a6811e939ee5' \
+   -H 'Content-Type: application/json' \
+   -d '
+   {
+        "msgtype": "text",
+        "text": {
+            "content": "${msg}"
+        }
+   }'
+
     `
     const res=await request(api)
+    console.log(res)
     return res
 }
+function isWeekend(){
+    let week=dayjs().day()
+    if(week==6 || week==0)return true
+    return false
+}
 
-// 每天下午五点半执行
-schedule.scheduleJob({ second: 0, minute: 30, hour: 17 }, () => {
-    // shell.exec(sendMsg('下班提醒：五点半了，该收拾收拾下班了！！！'))
+schedule.scheduleJob({ second: 0, minute: 45, hour: 17 }, () => {
+    if(!isWeekend()){
+        // sendMsg('下班提醒：😃😃😃😃😃😃')
+    }
+   
 })
-// schedule.scheduleJob({ second: 0, minute: 51, hour: 16 }, () => {
-//     console.log('16.51了')
-//     // shell.exec(sendMsg('5点半了，可以收拾收拾下班了!!!'))
-// })
+schedule.scheduleJob({ second: 0, minute: 20, hour: 11 }, () => {
+    if(!isWeekend()){
+        // sendMsg('吃饭提醒：🍚🍚🍚🍚🍚🍚')
+    }
+   
+})
+
+// schedule.scheduleJob({ second: 0, minute: 43, hour: 21 }, () => {
+//     console.log('😝😝😝',isWeekend())
+//     // sendMsg('吃饭提醒：🍚🍚🍚🍚🍚🍚')
+//  })
