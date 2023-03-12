@@ -11,6 +11,7 @@ import dayjs = require('dayjs');
 import { createTextChangeRange, createTextSpan } from 'typescript';
 import { fetchDict, parseDict } from '../tools/haici';
 import { getFundInfo } from '../tools/invest';
+import { getBBVideoSrc } from '../tools/blibli';
 function getName(path: string) {
     return path.split('/').pop()
 }
@@ -155,5 +156,9 @@ router.get('/translate',async (ctx)=>{
     const res=parseDict(doc)
     ctx.body=getRes<any>(2000,res)
 })
-
+router.get('/bb-test',async ctx=>{
+    const src=await getBBVideoSrc(ctx.request.query.link)
+    console.log('🍎🍎🍎🍎',src)
+    ctx.body=getRes(200,src)
+})
 export default router.routes()

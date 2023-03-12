@@ -40,15 +40,30 @@ export function getBBVideoPage(link: string) {
  * @returns
  */
 export function getVideoUrlByRes(str: string) {
-    const res = str.match(
-        /readyVideoUrl:\s*\'((https?:\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]))/
-    )
-    return res[1]
+    // const res = str.match(
+    //     /readyVideoUrl:\s*\'((https?:\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]))/
+    // )
+    const mp4Regex = /https?:\/\/[^\\"]+\.mp4[^\\"]*/;
+const match = str.match(mp4Regex);
+
+if (match) {
+  console.log(match[0]);
+  return match[0]
+} else {
+  console.log('未找到 MP4 播放链接');
+  return '操'
 }
+
+   
+    // return res[1]
+}
+//请求h5页面
 export const getBBVideoSrc = async (link: string) => {
+    
     const api = `
     curl ${link} -L -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'  --compressed
     `
+    console.log(api,'🏀🏀🏀')
     const res = await request(api)
     return getVideoUrlByRes(res.data)
 }
@@ -105,16 +120,23 @@ export function getAv(x: string) {
     return (r - add) ^ xor
 }
 
-const getVideoUrl=async(aid:number,p:number=1)=>{
-    const res=await axios.get(`https://api.injahow.cn/bparse/?av=${aid}&p=${p}&format=mp4&otype=json`)
-    console.log('res',res.data.url)
-    return res.data?.url
+const getVideoUrl=async(aid:number,p:number=1,cid:string,bid:string)=>{
+    let link=`https://www.bilibili.com/video/${bid}?p=${p}`
+    return( await getBBVideoSrc(link))
+    const res=await axios.request({
+        url:`https://api.bilibili.com/x/player/playurl?aid=${aid}&bvid=${bid}&cid=${cid}`,
+        headers:{
+            Cookie:'_uuid=ECD29A42-D6E2-2C85-D76D-53E293C8053659853infoc; bfe_id=61a513175dc1ae8854a560f6b82b37af; CURRENT_BLACKGAP=1; CURRENT_FNVAL=80; CURRENT_QUALITY=80',
+            Referer:'https://www.bilibili.com/'
+        }
+    })
+    return res.data?.data.durl[0].url
 }
 // 获取高清视频
 export const getHDLink = async (bid: string, cid: string,p?:number) => {
     const aid = getAv(bid)
 
-    const url = await getVideoUrl(aid,p)
+    const url = await getVideoUrl(aid,p,cid,bid)
     // console.log('----------',res)
     return {
         src: url,
