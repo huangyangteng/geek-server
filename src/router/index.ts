@@ -12,6 +12,7 @@ import NoteRouter from './note'
 import EftRouter from './etf'
 import JobRouter from './job'
 import ReadRouter from './read'
+import BookRouter from './book'
 const apiRouter = new Router()
 apiRouter.use('/project', ProjectRouter)
 apiRouter.use('/history', history)
@@ -25,4 +26,5 @@ apiRouter.use('/note', NoteRouter)
 apiRouter.use('/etf', EftRouter)
 apiRouter.use('/job', JobRouter)
 apiRouter.use('/read', ReadRouter)
+apiRouter.use('/book',BookRouter)
 export default apiRouter.routes()

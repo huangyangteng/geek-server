@@ -9,3 +9,6 @@ GET http://localhost:22222/util/translate?word=bid
 
 ### 获取基金信息
 GET http://localhost:22222/util/invest
+
+### 解析blibli
+GET http://localhost:22222/util/bb-test?link=https://www.bilibili.com/video/BV1oT411h7ZL

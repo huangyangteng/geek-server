@@ -1,0 +1,21 @@
+### 测试路由
+GET http://localhost:22222/read/test HTTP/1.1
+
+### 查询
+GET http://localhost:22222/read HTTP/1.1
+
+### 获取链接信息
+GET http://localhost:22222/read/info?link=https://coolshell.cn/articles/22173.html HTTP/1.1
+
+
+### 增加
+POST http://localhost:22222/read/ HTTP/1.1
+content-type:application/json
+
+{"name":"RESTAPI","link":"https://coolshell.cn/articles/22173.html"}
+
+### 修改
+PUT http://localhost:22222/read/ HTTP/1.1
+content-type:application/json
+
+{"id":5,"push":1,"tag":"HTTP"}

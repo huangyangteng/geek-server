@@ -25,18 +25,24 @@ function isWeekend(){
     return false
 }
 
-schedule.scheduleJob({ second: 0, minute: 45, hour: 17 }, () => {
+schedule.scheduleJob({ second: 0, minute: 40, hour: 15 }, () => {
     if(!isWeekend()){
-        // sendMsg('下班提醒：😃😃😃😃😃😃')
+        sendMsg('🍎🍎🍎动动脖子:'+'https://www.bilibili.com/video/BV1YN411F7RP')
     }
    
 })
-schedule.scheduleJob({ second: 0, minute: 20, hour: 11 }, () => {
+schedule.scheduleJob({ second: 0, minute: 40, hour: 16 }, () => {
     if(!isWeekend()){
-        // sendMsg('吃饭提醒：🍚🍚🍚🍚🍚🍚')
+        sendMsg('🏀🏀🏀动动脖子:'+'https://www.bilibili.com/video/BV1YN411F7RP')
     }
    
 })
+// schedule.scheduleJob({ second: 0, minute: 20, hour: 11 }, () => {
+//     if(!isWeekend()){
+//         // sendMsg('吃饭提醒：🍚🍚🍚🍚🍚🍚')
+//     }
+   
+// })
 
 // schedule.scheduleJob({ second: 0, minute: 43, hour: 21 }, () => {
 //     console.log('😝😝😝',isWeekend())
