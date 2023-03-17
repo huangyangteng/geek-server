@@ -29,8 +29,8 @@ let mailOptionSuccess = {
     html: '<b>掘金自动签到成功</b>', // html body
 }
 const eftOptions={
-    from: '"ETF" <3034647379@qq.com>', // sender address
-    to: 'huangyangteng@ebupt.com', // list of receivers
+    from: '"嘎嘎噶" <3034647379@qq.com>', // sender address
+    to: 'hyangteng@gmail.com', // list of receivers
     subject: 'ETF', // Subject line
     // 发送text或者html格式
     // text: 'Hello world?', // plain text body
@@ -39,6 +39,7 @@ const eftOptions={
 
 
 export function sendEmail(subject:string,html?:string) {
+    console.log('🍎🍎🍎🍎',subject)
     // send mail with defined transport object
     transporter.sendMail({
         ...eftOptions,

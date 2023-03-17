@@ -13,6 +13,8 @@ import EftRouter from './etf'
 import JobRouter from './job'
 import ReadRouter from './read'
 import BookRouter from './book'
+import CatalogRouter from './catalog'
+import ArticleRouter from './article'
 const apiRouter = new Router()
 apiRouter.use('/project', ProjectRouter)
 apiRouter.use('/history', history)
@@ -27,4 +29,7 @@ apiRouter.use('/etf', EftRouter)
 apiRouter.use('/job', JobRouter)
 apiRouter.use('/read', ReadRouter)
 apiRouter.use('/book',BookRouter)
+apiRouter.use('/catalog',CatalogRouter)
+apiRouter.use('/article',ArticleRouter)
+ 
 export default apiRouter.routes()

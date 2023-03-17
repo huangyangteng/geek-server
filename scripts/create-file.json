@@ -1,7 +1,7 @@
 [
   {
     "path": "/Users/h/self-apps/geek-server/src/router",
-    "files": [{"type":"route","name":"book"}],
+    "files": [{"type":"route","name":"catalog"},{"type":"route","name":"article"}],
     "overwrite": false
   }
 
