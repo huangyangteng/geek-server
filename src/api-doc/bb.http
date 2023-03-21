@@ -1,0 +1,4 @@
+
+### 转发
+GET http://localhost:22222/bb/dynamic?host_mid=1363445034&page=1 HTTP/1.1
+

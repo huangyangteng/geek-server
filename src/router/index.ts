@@ -1,5 +1,4 @@
 import * as Router from 'koa-router'
-
 import history from './history'
 import ProjectRouter from './projectRouter'
 import InfoRouter from './infoRouter'
@@ -15,6 +14,11 @@ import ReadRouter from './read'
 import BookRouter from './book'
 import CatalogRouter from './catalog'
 import ArticleRouter from './article'
+import TagRouter from './tag'
+import BbRouter from './bb'
+import MiguRouter from './migu'
+
+
 const apiRouter = new Router()
 apiRouter.use('/project', ProjectRouter)
 apiRouter.use('/history', history)
@@ -25,11 +29,13 @@ apiRouter.use('/user', userRouter)
 apiRouter.use('/music', musicRouter)
 apiRouter.use('/juejin', juejinRouter)
 apiRouter.use('/note', NoteRouter)
+apiRouter.use('/tag',TagRouter)
 apiRouter.use('/etf', EftRouter)
 apiRouter.use('/job', JobRouter)
 apiRouter.use('/read', ReadRouter)
 apiRouter.use('/book',BookRouter)
 apiRouter.use('/catalog',CatalogRouter)
 apiRouter.use('/article',ArticleRouter)
- 
+apiRouter.use('/bb',BbRouter)
+apiRouter.use('/migu',MiguRouter)
 export default apiRouter.routes()
