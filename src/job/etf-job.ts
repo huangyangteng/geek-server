@@ -2,6 +2,7 @@ import query from '../db/mysql'
 import { EtfItem } from '../types/eft'
 import { getEtfPrice } from '../tools/eft-tools'
 import { sendEmail } from '../tools/email'
+import {sendMsg} from './robot'
 const schedule = require('node-schedule')
 import dayjs = require('dayjs')
 const rule = '30 * * * * *'
@@ -58,17 +59,17 @@ export const etfJob = async () => {
         )
         if (price < buy1) {
             if (price < buy2) {
-                sendEmail(`${subject} 买买买😀😀😀`)
+                sendMsg(`${subject} 买买买😀😀😀`)
             } else {
-                sendEmail(`${subject} 买😀`)
+                sendMsg(`${subject} 买😀`)
             }
         }
         // sell1< sell2
         if (price > sell1) {
             if (price > sell2) {
-                sendEmail(`${subject} 卖卖卖😀😀😀`)
+                sendMsg(`${subject} 卖卖卖😀😀😀`)
             } else {
-                sendEmail(`${subject} 卖😀`)
+                sendMsg(`${subject} 卖😀`)
             }
         }
     }

@@ -1,5 +1,6 @@
 import query from '../db/mysql'
 import { sendEmail } from '../tools/email';
+import {sendMsg} from './robot'
 const shell=require('shelljs')
 const schedule = require('node-schedule')
 interface WebsiteUser {
@@ -65,7 +66,7 @@ export const juejinJob = async () => {
             shell.exec(luckyDraw(cookie),{silent:true})
         }
     } catch (error) {
-        sendEmail('掘金签到失败')
+        sendMsg('掘金签到失败')
     }
    
     

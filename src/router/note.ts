@@ -60,9 +60,11 @@ router.put('/',async ctx=>{
 router.get('/:id', async (ctx) => {
     const userId = ctx.params.id
     const connectId = ctx.query.connectId || -1
+    const tagId=ctx.query.tagId || ''
+    let tagSql=tagId?' AND `tag` = ?':''
     const res = await query<NoteItem[]>(
-        'SELECT * from note WHERE `user_id` = ? AND `connect_id` = ? ORDER BY `update_date` DESC ',
-        [userId, connectId]
+        'SELECT * from note WHERE `user_id` = ? AND `connect_id` = ?'+tagSql+' ORDER BY `update_date` DESC ',
+        [userId, connectId,tagId]
     )
     let list: NoteItem[] = convertToHump(res)
     list = list.map((item) => ({

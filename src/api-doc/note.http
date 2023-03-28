@@ -1,5 +1,5 @@
 ### 查询
-GET http://localhost:22222/note/6 HTTP/1.1
+GET http://localhost:22222/note/6?tagId= HTTP/1.1
 
 ### 新增-不带链接
 POST http://localhost:22222/note/ HTTP/1.1
