@@ -17,9 +17,13 @@ import ArticleRouter from './article'
 import TagRouter from './tag'
 import BbRouter from './bb'
 import MiguRouter from './migu'
+import UploadRouter from './upload'
+import ColumnRouter from './column'
 
 
 const apiRouter = new Router()
+apiRouter.use('/column',ColumnRouter)
+apiRouter.use('/upload',UploadRouter)
 apiRouter.use('/project', ProjectRouter)
 apiRouter.use('/history', history)
 apiRouter.use('/info', InfoRouter)

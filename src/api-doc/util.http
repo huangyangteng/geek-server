@@ -12,3 +12,9 @@ GET http://localhost:22222/util/invest
 
 ### 解析blibli
 GET http://localhost:22222/util/bb-test?link=https://www.bilibili.com/video/BV1oT411h7ZL
+
+### 查询本周工作时长
+GET http://10.4.6.175:22222/util/checking-in?name=huangyangteng&pass=1234
+
+### 取消关注
+GET http://10.4.6.175:22222/util/cancel-attention?ids=25476670,26124833,7106249,119115330,18534696,90614797,15049092,17171565,104352019,95209550,344849038,176321970,298289539,27038754,92803415,294666436,112836656
