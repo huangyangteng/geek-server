@@ -25,15 +25,15 @@ function isWeekend(){
     return false
 }
 
-schedule.scheduleJob({ second: 0, minute: 40, hour: 15 }, () => {
+schedule.scheduleJob({ second: 0, minute: 40, hour: 9 }, () => {
     if(!isWeekend()){
-        sendMsg('🍎🍎🍎动动脖子:'+'https://www.bilibili.com/video/BV1YN411F7RP')
+        sendMsg(`🐔🐔🐔早上好，请填写今日份的tapd：https://www.tapd.cn/my_worktable/index/todo`)
     }
    
 })
-schedule.scheduleJob({ second: 0, minute: 40, hour: 16 }, () => {
+schedule.scheduleJob({ second: 0, minute: 40, hour: 17 }, () => {
     if(!isWeekend()){
-        sendMsg('🏀🏀🏀动动脖子:'+'https://www.bilibili.com/video/BV1YN411F7RP')
+        sendMsg(`🐥🐥🐥下午好，请填写今日份的tapd：https://www.tapd.cn/my_worktable/index/todo`)
     }
    
 })
