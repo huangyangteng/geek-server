@@ -16,7 +16,4 @@ npm run start 启动程序
 
 
 ## 部署流程20230630
-执行 npm run pm2时报错：
-[PM2][ERROR] Interpreter /usr/local/lib/node_modules/pm2/node_modules/.bin/ts-node is NOT AVAILABLE in PATH. (type 'which /usr/local/lib/node_modules/pm2/node_modules/.bin/ts-node' to double check.)
-解决方法：创建符号链接(你可以创建一个符号链接，将 /usr/local/bin/ts-node 指向 /usr/local/lib/node_modules/pm2/node_modules/.bin/ts-node)
-ln -s /usr/local/bin/ts-node /usr/local/lib/node_modules/pm2/node_modules/.bin/ts-node
+ pm2 start --interpreter="node_modules/.bin/ts-node" src/server.ts

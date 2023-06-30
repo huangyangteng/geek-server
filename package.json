@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server.ts",
-    "start": "pm2 start src/server.ts",
+    "start": "pm2 start --interpreter='node_modules/.bin/ts-node' src/server.ts",
     "pm2": "NODE_ENV=production pm2 start src/server.ts --watch"
   },
   "author": "",
