@@ -16,4 +16,5 @@ npm run start 启动程序
 
 
 ## 部署流程20230630
- pm2 start --interpreter="node_modules/.bin/ts-node" src/server.ts
+修复启动错误
+pm2 start --interpreter="node_modules/.bin/ts-node" src/server.ts

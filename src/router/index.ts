@@ -19,9 +19,10 @@ import BbRouter from './bb'
 import MiguRouter from './migu'
 import UploadRouter from './upload'
 import ColumnRouter from './column'
-
+import GkarticleRouter from './gkarticle'
 
 const apiRouter = new Router()
+apiRouter.use('/gkarticle',GkarticleRouter)
 apiRouter.use('/column',ColumnRouter)
 apiRouter.use('/upload',UploadRouter)
 apiRouter.use('/project', ProjectRouter)

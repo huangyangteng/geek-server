@@ -126,7 +126,7 @@ content-type:application/json
     
     
 `
-    fs.writeFileSync(`/Users/h/self-apps/geek-server/src/api-doc/${name}.http`, docContent)
+    fs.writeFileSync(`/Users/h/hhh-project/self-apps/geek-server/src/api-doc/${name}.http`, docContent)
 
     const printContent=`
 import ${UpperName}Router from './${name}'
