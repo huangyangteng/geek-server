@@ -14,8 +14,10 @@ app.use(
         formidable: {
             uploadDir: path.join(__dirname,'..', 'gk-files'),
             keepExtensions: true,
-            maxFieldsSize: 2 * 1024 * 1024
-        }
+            maxFieldsSize: 200 * 1024 * 1024,
+        },
+        formLimit:"10mb",
+        jsonLimit:"10mb"
     })
 )
 // 设置跨域

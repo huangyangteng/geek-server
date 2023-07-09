@@ -3,7 +3,7 @@
 GET http://localhost:22222/gkarticle HTTP/1.1
 
 ### 查询某项
-GET http://localhost:22222/gkarticle/654548 HTTP/1.1
+GET http://localhost:22222/gkarticle/181 HTTP/1.1
 
 ### 增加
 POST http://localhost:22222/gkarticle/ HTTP/1.1
@@ -17,4 +17,10 @@ content-type:application/json
 
 {"id":5}
     
+    
+### 删除
+POST http://localhost:22222/gkarticle/del HTTP/1.1
+content-type:application/json
+
+{"ids":[18126]}
     

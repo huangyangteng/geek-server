@@ -1,7 +1,7 @@
 
 import * as Router from 'koa-router'
 const router = new Router()
-import { getRes } from '../tools/index'
+import { convertToUnderLine, getRes } from '../tools/index'
 import query from '../db/mysql'
 import { OkPacket } from '../types/index'
 
@@ -18,14 +18,18 @@ export interface ColumnItem {
 
 // 查询
 router.get('/', async (ctx) => {
-    let res = await query<ColumnItem[]>('SELECT * from `column`', [])
+    let res = await query<ColumnItem[]>('SELECT title,cid,authorname from `column`', [])
     ctx.body = getRes<ColumnItem[]>(2000, res)
+})
+router.get('/:cid', async (ctx) => {
+    let res = await query<any>('SELECT * from `column` where cid = ?', [ctx.params.cid])
+    ctx.body = getRes<any>(2000, res[0])
 })
 
 // 添加
 router.post('/', async (ctx) => {
     let req = {
-        ...ctx.request.body,
+        ...convertToUnderLine(ctx.request.body),
     }
     const res=await query<OkPacket>('INSERT INTO `column` SET?', req)
     ctx.body = getRes<number>(2000, res.insertId)

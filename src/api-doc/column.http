@@ -7,7 +7,7 @@ GET http://localhost:22222/column HTTP/1.1
 POST http://localhost:22222/column/ HTTP/1.1
 content-type:application/json
 
-{"name":"RESTAPI"}
+{ "cid": "111","type":0, "title": "测试", "authorname": "小明", "authorinfo": "jajdfj", "chapters": "jajdjf", "articles": "jdjf", "isvideo": 0 }
 
 ### 修改
 PUT http://localhost:22222/column/ HTTP/1.1

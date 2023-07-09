@@ -58,6 +58,16 @@ router.put('/', async (ctx) => {
     ])
     ctx.body=getRes<GkarticleItem>(2000,req)
 })
-
+//批量删除
+router.post('/del',async ctx=>{
+    let {ids}=ctx.request.body
+    console.log('🐥🐥🐥',ids)
+    if(!ids){
+        ctx.body=getRes<string>(5001,'参数不完整')
+        return
+    }
+    await query<OkPacket>('DELETE FROM `gkarticle` WHERE aid IN (?)',[ids])
+    ctx.body=getRes<string>(2000,'删除成功')
+})
 export default router.routes()
         
