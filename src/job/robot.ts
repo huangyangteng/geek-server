@@ -1,9 +1,14 @@
-import { request } from "../tools"
+import { request } from '../tools'
 import dayjs = require('dayjs')
 const schedule = require('node-schedule')
-const shell=require('shelljs')
-export const sendMsg = async(msg:string) => {
-    const api=`
+const shell = require('shelljs')
+// key:dayjs().format('YYYY-MM-DD')+msg
+//value:  true|false
+let sendMap: Record<string, boolean> = {}
+export const sendMsg = async (msg: string) => {
+    let key = dayjs().format('YYYY-MM-DD')+msg
+    if (sendMap[key]) return
+    const api = `
     curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=7693ec9b-2c69-47c5-b683-a6811e939ee5' \
    -H 'Content-Type: application/json' \
    -d '
@@ -15,41 +20,43 @@ export const sendMsg = async(msg:string) => {
    }'
 
     `
-    const res=await request(api)
-    console.log(res)
+    const res = await request(api)
+    sendMap[key] = true
     return res
 }
-function isWeekend(){
-    let week=dayjs().day()
-    if(week==6 || week==0)return true
+function isWeekend() {
+    let week = dayjs().day()
+    if (week == 6 || week == 0) return true
     return false
 }
 
 schedule.scheduleJob({ second: 0, minute: 40, hour: 9 }, () => {
-    if(!isWeekend()){
-        sendMsg(`🐔🐔🐔早上好，请填写今日份的tapd：https://www.tapd.cn/my_worktable/index/todo`)
+    if (!isWeekend()) {
+        sendMsg(
+            `🐔🐔🐔早上好，请填写今日份的tapd：https://www.tapd.cn/my_worktable/index/todo`
+        )
     }
-   
 })
 schedule.scheduleJob({ second: 0, minute: 40, hour: 17 }, () => {
-    if(!isWeekend()){
-        sendMsg(`🐥🐥🐥下午好，请填写今日份的tapd：https://www.tapd.cn/my_worktable/index/todo`)
+    if (!isWeekend()) {
+        sendMsg(
+            `🐥🐥🐥下午好，请填写今日份的tapd：https://www.tapd.cn/my_worktable/index/todo`
+        )
     }
-   
 })
 // schedule.scheduleJob({ second: 0, minute: 20, hour: 11 }, () => {
 //     if(!isWeekend()){
 //         // sendMsg('吃饭提醒：🍚🍚🍚🍚🍚🍚')
 //     }
-   
+
 // })
 
 // schedule.scheduleJob({ second: 0, minute: 43, hour: 21 }, () => {
 //     console.log('😝😝😝',isWeekend())
 //     // sendMsg('吃饭提醒：🍚🍚🍚🍚🍚🍚')
 //  })
-const fetchGithub=async()=>{
-    const api=`
+const fetchGithub = async () => {
+    const api = `
     curl 'https://githubedu.com/github/submit' \
   -H 'Accept: application/json, text/plain, */*' \
   -H 'Accept-Language: zh-CN,zh;q=0.9' \
@@ -73,6 +80,6 @@ const fetchGithub=async()=>{
 }
 // fetchGithub()
 // 每5分钟请求一次
-schedule.scheduleJob('*/5 * * * *',function(){
+schedule.scheduleJob('*/5 * * * *', function () {
     fetchGithub()
 })

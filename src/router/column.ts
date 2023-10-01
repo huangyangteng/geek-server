@@ -18,7 +18,7 @@ export interface ColumnItem {
 
 // 查询
 router.get('/', async (ctx) => {
-    let res = await query<ColumnItem[]>('SELECT title,cid,authorname from `column`', [])
+    let res = await query<ColumnItem[]>('SELECT title,cid,type,authorname from `column`', [])
     ctx.body = getRes<ColumnItem[]>(2000, res)
 })
 router.get('/:cid', async (ctx) => {
@@ -50,9 +50,8 @@ router.put('/', async (ctx) => {
         ...res[0],
         ...ctx.request.body
     }
-    await query<OkPacket>('UPDATE column SET name=?,name2=? WHERE id=?', [
-        req.name,
-        req.name2,
+    await query<OkPacket>('UPDATE `column` SET type=? WHERE id=?', [
+        req.type,
         String(id),
     ])
     ctx.body=getRes<ColumnItem>(2000,req)

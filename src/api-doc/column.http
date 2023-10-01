@@ -13,6 +13,6 @@ content-type:application/json
 PUT http://localhost:22222/column/ HTTP/1.1
 content-type:application/json
 
-{"id":5}
+{"id":241,"type":"aaa"}
     
     
