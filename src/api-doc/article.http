@@ -1,6 +1,6 @@
 
 ### 查询
-GET http://localhost:22222/article?catalogId=1 HTTP/1.1
+GET http://localhost:22222/article?id=181 HTTP/1.1
 
 
 ### 增加

@@ -18,7 +18,7 @@ export interface ColumnItem {
 
 // 查询
 router.get('/', async (ctx) => {
-    let res = await query<ColumnItem[]>('SELECT title,cid,type,authorname from `column`', [])
+    let res = await query<ColumnItem[]>('SELECT id,title,cid,type,authorname,authorinfo from `column`', [])
     ctx.body = getRes<ColumnItem[]>(2000, res)
 })
 router.get('/:cid', async (ctx) => {
