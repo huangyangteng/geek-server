@@ -7,6 +7,7 @@ import { OkPacket } from '../types/index'
 
 export interface GkarticleItem {
     id?: number
+    aid?: number
 }
 /**
  * 获取前端发送数据
@@ -18,8 +19,12 @@ export interface GkarticleItem {
 
 // 查询
 router.get('/', async (ctx) => {
-    let res = await query<GkarticleItem[]>('SELECT aid from `gkarticle`', [])
-    ctx.body = getRes<GkarticleItem[]>(2000, res)
+    let res:any = await query<GkarticleItem[]>('SELECT id,aid from `gkarticle`', [])
+    const map=res.reduce((prev:any, cur:any) => {
+        prev[cur.aid] = cur.id
+        return prev
+    }, {})
+    ctx.body = getRes<GkarticleItem[]>(2000, map)
 })
 router.get('/detail', async (ctx) => {
     const {id}=ctx.query
