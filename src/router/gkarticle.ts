@@ -21,6 +21,12 @@ router.get('/', async (ctx) => {
     let res = await query<GkarticleItem[]>('SELECT aid from `gkarticle`', [])
     ctx.body = getRes<GkarticleItem[]>(2000, res)
 })
+router.get('/detail', async (ctx) => {
+    const {id}=ctx.query
+    let res = await query<GkarticleItem[]>('SELECT * from `gkarticle` where id = ?', [id])
+    ctx.body = getRes<GkarticleItem>(2000, res[0])
+})
+
 
 router.get('/:aid', async (ctx) => {
     let res = await query<GkarticleItem[]>('SELECT * from `gkarticle` where aid = ?', [ctx.params.aid])

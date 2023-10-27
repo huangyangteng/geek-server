@@ -3,6 +3,11 @@
 GET http://localhost:22222/column HTTP/1.1
 ### 查询单个
 GET http://localhost:22222/column/100002201 HTTP/1.1
+
+### 查询单个detail通过id
+GET http://localhost:22222/column/detail?id=179 HTTP/1.1
+
+
 ### 增加
 POST http://localhost:22222/column/ HTTP/1.1
 content-type:application/json

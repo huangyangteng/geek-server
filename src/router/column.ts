@@ -21,6 +21,10 @@ router.get('/', async (ctx) => {
     let res = await query<ColumnItem[]>('SELECT id,title,cid,type,authorname,authorinfo from `column`', [])
     ctx.body = getRes<ColumnItem[]>(2000, res)
 })
+router.get('/detail', async (ctx) => {
+    let res = await query<any>('SELECT * from `column` where id = ?', [ctx.query.id])
+    ctx.body = getRes<any>(2000, res[0])
+})
 router.get('/:cid', async (ctx) => {
     let res = await query<any>('SELECT * from `column` where cid = ?', [ctx.params.cid])
     ctx.body = getRes<any>(2000, res[0])
