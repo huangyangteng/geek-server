@@ -23,7 +23,9 @@ import GkarticleRouter from './gkarticle'
 
 const apiRouter = new Router()
 apiRouter.use('/gkarticle',GkarticleRouter)
+import TraderRouter from './trader'
 apiRouter.use('/column',ColumnRouter)
+apiRouter.use('/trader',TraderRouter)
 apiRouter.use('/upload',UploadRouter)
 apiRouter.use('/project', ProjectRouter)
 apiRouter.use('/history', history)
