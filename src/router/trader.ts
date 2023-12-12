@@ -1,4 +1,3 @@
-
 import * as Router from 'koa-router'
 const router = new Router()
 import { getRes } from '../tools/index'
@@ -8,13 +7,14 @@ import dayjs = require('dayjs')
 import { getAllBalance } from '../tools/trader'
 export interface TraderItem {
     id: number
-    name:string
-    key:string
-    parterid:string
-    status:number
-    addTime:string
-    balance?:string
-    error?:string
+    name: string
+    key: string
+    parterid: string
+    status: number
+    addTime: string
+    balance?: string
+    error?: string
+    link: string
 }
 /**
  * 获取前端发送数据
@@ -27,23 +27,23 @@ export interface TraderItem {
 // 查询
 router.get('/', async (ctx) => {
     let res = await query<TraderItem[]>('SELECT * from `trader`', [])
-    ctx.body = getRes<TraderItem[]>(2000, res)
+    ctx.body = getRes<TraderItem[]>(2000, res.reverse())
 })
 
-router.post('/balance',async ctx=>{
+router.post('/balance', async (ctx) => {
     let res = await query<TraderItem[]>('SELECT * from `trader`', [])
-    console.log('🐔🐔🐔',res)
-    const data=await getAllBalance(res)
-    ctx.body=getRes<TraderItem[]>(200,data)
+    const data = await getAllBalance(res)
+    ctx.body = getRes<TraderItem[]>(2000, data.reverse())
 })
 
 // 添加
 router.post('/', async (ctx) => {
     let req = {
         ...ctx.request.body,
-        addTime:dayjs().format('YYYY-MM-DD HH:mm:ss')
+        addTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        status: 1,
     }
-    const res=await query<OkPacket>('INSERT INTO `trader` SET?', req)
+    const res = await query<OkPacket>('INSERT INTO `trader` SET?', req)
     ctx.body = getRes<number>(2000, res.insertId)
 })
 
@@ -55,20 +55,21 @@ router.put('/', async (ctx) => {
         return
     }
     // 先查询原始数据
-    const res = await query<TraderItem[]>('SELECT * from `trader` WHERE `id`=? ', [
-        id,
-    ])
+    const res = await query<TraderItem[]>(
+        'SELECT * from `trader` WHERE `id`=? ',
+        [id]
+    )
     let req = {
         ...res[0],
-        ...ctx.request.body
+        ...ctx.request.body,
     }
-    await query<OkPacket>('UPDATE trader SET name=?,name2=? WHERE id=?', [
-        req.name,
-        req.name2,
-        String(id),
-    ])
-    ctx.body=getRes<TraderItem>(2000,req)
+    await query<OkPacket>(
+        'UPDATE trader SET name=?,parterid=?,`key`=?,link=? WHERE id=?',
+        [req.name, req.parterid, req.key,req.link, String(id)]
+    )
+    ctx.body = getRes<TraderItem>(2000, req)
 })
 
+// 删除
+
 export default router.routes()
-        
