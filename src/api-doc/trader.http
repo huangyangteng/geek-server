@@ -8,7 +8,7 @@ GET http://localhost:22222/trader HTTP/1.1
 POST http://localhost:22222/trader/ HTTP/1.1
 content-type:application/json
 
-{"name":"测试","parterid":"10059","key":"8EBCBFD869EC825F7FDCE95E6902BA65","status":1,"addTime":"2023-12-08 06:54:00"}
+{"name":"测试JH","parterid":"40474","key":"D0D5A8443625","status":1,"addTime":"2023-12-08 06:54:00","platform":"JH"}
 
 ### 修改
 PUT http://localhost:22222/trader/ HTTP/1.1

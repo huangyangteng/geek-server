@@ -14,7 +14,9 @@ export interface TraderItem {
     addTime: string
     balance?: string
     error?: string
-    link: string
+    platform: string
+    link?: string
+    frozen_balance?: string
 }
 /**
  * 获取前端发送数据
@@ -64,8 +66,8 @@ router.put('/', async (ctx) => {
         ...ctx.request.body,
     }
     await query<OkPacket>(
-        'UPDATE trader SET name=?,parterid=?,`key`=?,link=? WHERE id=?',
-        [req.name, req.parterid, req.key,req.link, String(id)]
+        'UPDATE trader SET name=?,parterid=?,`key`=?,platform=? WHERE id=?',
+        [req.name, req.parterid, req.key, req.platform, String(id)]
     )
     ctx.body = getRes<TraderItem>(2000, req)
 })

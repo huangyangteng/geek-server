@@ -1,8 +1,9 @@
 import axios from 'axios'
 import dayjs = require('dayjs')
 import { md5 } from './md5'
-import trader from '../router/trader'
 import { TraderItem } from '../router/trader'
+var qs = require('querystring')
+
 const VERSION = '1.0.1'
 interface fetchBalanceParams {
     version: string
@@ -12,35 +13,42 @@ interface fetchBalanceParams {
 }
 export const getAllBalance = async (list: TraderItem[]) => {
     for (let i = 0; i < list.length; i++) {
-        let res = await fetchBalance(getParams(list[i]), list[i].link)
+        let res:any = await fetchBalance(list[i])
         list[i] = {
             ...list[i],
             balance: res?.balance,
+            frozen_balance: res?.frozen_balance || 0,
             error: res?.error,
         }
     }
     return list
 }
-export function getParams({ parterid, key }: TraderItem) {
-    const ts = dayjs().format('YYYYMMDDHHmmss')
-    const params: fetchBalanceParams = {
-        version: VERSION,
-        ts,
-        parterid,
-        sign: md5(key + VERSION + parterid + ts + key),
+const fetchBalance = async (data: TraderItem) => {
+    switch (data.platform) {
+        case 'AM':
+            return await fetchAMBalance(data)
+        case 'JH':
+            return await fetchJHBalance(data)
+
+        default:
+            return Promise.resolve({
+                success: false,
+                balance: 0,
+                error: 'unknown platform',
+            })
     }
-    return params
 }
 
-export function fetchBalance(
-    data: fetchBalanceParams,
-    balanceAddress = 'http://api.qdwtict.com/balance.do'
-) {
-    if (!balanceAddress || !balanceAddress.includes('http')) {
-        balanceAddress = 'http://api.qdwtict.com/balance.do'
+function fetchAMBalance(data: TraderItem) {
+    const ts = dayjs().format('YYYYMMDDHHmmss')
+    const reqData: fetchBalanceParams = {
+        version: VERSION,
+        ts,
+        parterid: data.parterid,
+        sign: md5(data.key + VERSION + data.parterid + ts + data.key),
     }
     return axios
-        .post(balanceAddress, data)
+        .post('http://api.qdwtict.com/balance.do', reqData)
         .then((res) => res.data)
         .then((res) => {
             if (res.code == '00000') {
@@ -53,6 +61,34 @@ export function fetchBalance(
                     success: false,
                     error: res.msg,
                     balance: 0,
+                }
+            }
+        })
+}
+
+function fetchJHBalance(data: TraderItem) {
+    const ts = dayjs().format('YYYYMMDDHHmmss')
+    const reqData = {
+        userid: data.parterid,
+        create_time: ts,
+        sign: md5(ts + data.parterid + data.key).toUpperCase(),
+    }
+    return axios
+        .post('http://47.104.129.40:80/user/balance.do', qs.stringify(reqData))
+        .then((res) => res.data)
+        .then((res) => {
+            if (res.status == '0') {
+                return {
+                    success: true,
+                    balance: res.balance,
+                    frozen_balance: res.frozen_balance,
+                }
+            } else {
+                return {
+                    success: false,
+                    error: res.msg,
+                    balance: 0,
+                    frozen_balance: 0,
                 }
             }
         })
