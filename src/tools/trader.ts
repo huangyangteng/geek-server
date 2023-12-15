@@ -24,19 +24,35 @@ export const getAllBalance = async (list: TraderItem[]) => {
     return list
 }
 const fetchBalance = async (data: TraderItem) => {
-    switch (data.platform) {
-        case 'AM':
-            return await fetchAMBalance(data)
-        case 'JH':
-            return await fetchJHBalance(data)
-        case 'JH2':
-            return await fetchJH2Balance(data)
-        default:
-            return Promise.resolve({
-                success: false,
-                balance: 0,
-                error: 'unknown platform',
-            })
+    console.log('platform', data.platform)
+    try {
+        switch (data.platform) {
+            case 'AM':
+                return await fetchAMBalance(data)
+            case 'JH':
+                return await fetchJHBalance(data)
+            case 'JH2':
+                return await fetchJH2Balance(data)
+            case 'WH':
+                return await fetchWHBalance(data)
+            case 'XJ':
+                return await fetchXJBalance(data)
+            case 'ZX':
+                return await fetchZXBalance(data)
+            default:
+                return Promise.resolve({
+                    success: false,
+                    balance: 0,
+                    error: 'unknown platform',
+                })
+        }
+    } catch (error) {
+        console.log('😀😀😀', error)
+        return Promise.resolve({
+            success: false,
+            balance: 0,
+            error: error,
+        })
     }
 }
 
@@ -80,7 +96,6 @@ function fetchJHBalance(data: TraderItem) {
         .post(url, qs.stringify(reqData))
         .then((res) => res.data)
         .then((res) => {
-            console.log('🐔🐔🐔', res)
             if (res.status == '0') {
                 return {
                     success: true,
@@ -104,7 +119,6 @@ function fetchJH2Balance(data: TraderItem) {
         userId: data.parterid,
         sign: md5(data.parterid + data.key),
     }
-    console.log('🐔🐔🐔', reqData)
     const url = data.link || 'http://47.104.129.40:80/user/balance.do'
     return axios
         .post(url, qs.stringify(reqData))
@@ -122,6 +136,91 @@ function fetchJH2Balance(data: TraderItem) {
                     error: res.msg,
                     balance: 0,
                     frozen_balance: 0,
+                }
+            }
+        })
+}
+
+function fetchWHBalance(data: TraderItem) {
+    const ts = dayjs().format('YYYYMMDDHHmmss')
+    const reqData = {
+        app_id: data.parterid,
+        sign: md5(`password=${data.key}`).toUpperCase(),
+    }
+    const url =
+        data.link || 'http://frp.fjwolf.com:9090/frp/api/merchant/querybalance'
+    return axios
+        .post(url, reqData)
+        .then((res) => res.data)
+        .then((res) => {
+            if (res.result_code == '00000') {
+                return {
+                    success: true,
+                    balance: res.balance,
+                }
+            } else {
+                return {
+                    success: false,
+                    error: res.msg,
+                    balance: 0,
+                }
+            }
+        })
+}
+
+function fetchXJBalance(data: TraderItem) {
+    const reqData = {
+        szAgentId: data.parterid,
+        szVerifyString: md5(`szAgentId=${data.parterid}&szKey=${data.key}`),
+    }
+    console.log('xj',`szAgentId=${data.parterid}&szKey=${data.key}`, reqData)
+    const url =
+        data.link || 'http://101.37.65.140:10186/plat/api/old/queryBalance'
+    return axios
+        .post(url, qs.stringify(reqData))
+        .then((res) => res.data)
+        .then((res) => {
+            console.log('🍎🍎🍎xj', res)
+            if (res.nRtn == '0') {
+                return {
+                    success: true,
+                    balance: res.balance,
+                }
+            } else {
+                return {
+                    success: false,
+                    error: res.szRtnCode,
+                    balance: 0,
+                }
+            }
+        })
+}
+
+function fetchZXBalance(data: TraderItem) {
+    const request_time = dayjs().format('YYYYMMDDHHmmss')
+    const reqData = {
+        mrch_no: data.parterid,
+        request_time,
+        sign: md5(
+            'mrch_no' + data.parterid + 'request_time' + request_time + data.key
+        ),
+    }
+    const url =
+        data.link || 'http://balance.julives.com:9080/zxpaycore/v2/balance'
+    return axios
+        .post(url, reqData)
+        .then((res) => res.data)
+        .then((res) => {
+            if (res.code == '2') {
+                return {
+                    success: true,
+                    balance: res?.data?.balance,
+                }
+            } else {
+                return {
+                    success: false,
+                    error: res.message,
+                    balance: 0,
                 }
             }
         })
