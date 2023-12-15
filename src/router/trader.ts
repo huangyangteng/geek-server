@@ -66,8 +66,8 @@ router.put('/', async (ctx) => {
         ...ctx.request.body,
     }
     await query<OkPacket>(
-        'UPDATE trader SET name=?,parterid=?,`key`=?,platform=? WHERE id=?',
-        [req.name, req.parterid, req.key, req.platform, String(id)]
+        'UPDATE trader SET name=?,parterid=?,`key`=?,platform=?,link=? WHERE id=?',
+        [req.name, req.parterid, req.key, req.platform, req.link, String(id)]
     )
     ctx.body = getRes<TraderItem>(2000, req)
 })
