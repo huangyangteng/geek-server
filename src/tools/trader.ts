@@ -184,7 +184,7 @@ function fetchXJBalance(data: TraderItem) {
             if (res.nRtn == '0') {
                 return {
                     success: true,
-                    balance: res.balance,
+                    balance: res.fBalance,
                 }
             } else {
                 return {
