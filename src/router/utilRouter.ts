@@ -1,6 +1,5 @@
 import * as Router from 'koa-router'
 import {
-    getRes,
     walkDir,
     getExt,
     uuid,
@@ -20,6 +19,8 @@ import { createTextChangeRange, createTextSpan } from 'typescript'
 import { fetchDict, parseDict } from '../tools/haici'
 import { getFundInfo } from '../tools/invest'
 import { getBBVideoSrc } from '../tools/blibli'
+import { getRes } from '../tools/index';
+import {generateReporter} from '../tools/reporter/index' 
 function getName(path: string) {
     return path.split('/').pop()
 }
@@ -323,6 +324,13 @@ router.get('/cancel-attention',async (ctx) => {
        console.log(i,res)
     }
     ctx.body=getRes<any>(2000,'取消关注成功')
+})
+
+
+router.post('/reporter',async ctx=>{
+    const rule=ctx.request.body
+    const res=await generateReporter(rule)
+    ctx.body=res
 })
 
 export default router.routes()
