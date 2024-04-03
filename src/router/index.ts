@@ -20,10 +20,11 @@ import MiguRouter from './migu'
 import UploadRouter from './upload'
 import ColumnRouter from './column'
 import GkarticleRouter from './gkarticle'
-
+import ReminderRouter from './reminder'
 const apiRouter = new Router()
 apiRouter.use('/gkarticle',GkarticleRouter)
 import TraderRouter from './trader'
+apiRouter.use('/reminder',ReminderRouter)
 apiRouter.use('/column',ColumnRouter)
 apiRouter.use('/trader',TraderRouter)
 apiRouter.use('/upload',UploadRouter)
