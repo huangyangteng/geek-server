@@ -21,9 +21,11 @@ import UploadRouter from './upload'
 import ColumnRouter from './column'
 import GkarticleRouter from './gkarticle'
 import ReminderRouter from './reminder'
+import WorkRouter from './work'
+import TraderRouter from './trader'
 const apiRouter = new Router()
 apiRouter.use('/gkarticle',GkarticleRouter)
-import TraderRouter from './trader'
+apiRouter.use('/work',WorkRouter)
 apiRouter.use('/reminder',ReminderRouter)
 apiRouter.use('/column',ColumnRouter)
 apiRouter.use('/trader',TraderRouter)

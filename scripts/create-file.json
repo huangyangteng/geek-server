@@ -1,7 +1,7 @@
 [
   {
     "path": "/Users/h/hhh-project/self-apps/geek-server/src/router",
-    "files": [{"type":"route","name":"reminder"}],
+    "files": [{"type":"route","name":"work"}],
     "overwrite": false
   }
 
