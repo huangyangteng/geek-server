@@ -89,7 +89,19 @@ export function parseDict(html:string) {
         return arr
     }
     const getSoundMark=()=>{
-        return replaceLF($('.phonetic').text())
+        const audioPrefix='https://audio.dict.cn/'
+        return {
+            uk:{
+                text:replaceLF($('.phonetic span:first-child').text()).replace(/\s+/g,''),
+                fsound:audioPrefix+$('.phonetic span:first-child .fsound').attr('naudio'),
+                sound:audioPrefix+$('.phonetic span:first-child .sound:last-child').attr('naudio'),
+            },
+            us:{
+                text:replaceLF($('.phonetic span:last-child').text()).replace(/\s+/g,''),
+                fsound:audioPrefix+$('.phonetic span:last-child .fsound').attr('naudio'),
+                sound:audioPrefix+$('.phonetic span:last-child .sound:last-child').attr('naudio'),
+            }
+        }
     }
     const getUsage=()=>{
 		let arr:any[]=[]

@@ -174,14 +174,17 @@ router.get('/see', async (ctx) => {
 // 解析海词词典
 router.get('/translate', async (ctx) => {
     const { word } = ctx.request.query
-    console.log(word)
     const doc = await fetchDict(word)
-    const res = parseDict(doc)
-    ctx.body = getRes<any>(2000, res)
+    try {
+        const res = parseDict(doc)
+        ctx.body = getRes<any>(2000, res)
+    } catch (error) {
+        ctx.body = getRes<any>(5000, '未找到该单词')
+    }
+   
 })
 router.get('/bb-test', async (ctx) => {
     const src = await getBBVideoSrc(ctx.request.query.link)
-    console.log('🍎🍎🍎🍎', src)
     ctx.body = getRes(200, src)
 })
 

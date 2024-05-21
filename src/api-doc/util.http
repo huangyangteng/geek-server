@@ -5,7 +5,7 @@ GET http://localhost:22222/util/bdy/video/xxx
 GET http://localhost:22222/util/see?key=怪奇物语
 
 ### 解析海词词典
-GET http://localhost:22222/util/translate?word=bid
+GET http://localhost:22222/util/translate?word=good
 
 ### 获取基金信息
 GET http://localhost:22222/util/invest
