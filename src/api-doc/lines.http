@@ -1,0 +1,18 @@
+
+### 查询
+GET http://localhost:22222/lines HTTP/1.1
+
+
+### 增加
+POST http://localhost:22222/lines/ HTTP/1.1
+content-type:application/json
+
+{"en":"I am peppa pig","ch":"我是小猪佩奇","time":0,"refer":"aaa"}
+
+### 修改
+PUT http://localhost:22222/lines/ HTTP/1.1
+content-type:application/json
+
+{"id":1,"time":1.1}
+    
+    

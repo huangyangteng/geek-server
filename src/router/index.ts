@@ -23,7 +23,9 @@ import GkarticleRouter from './gkarticle'
 import ReminderRouter from './reminder'
 import WorkRouter from './work'
 import TraderRouter from './trader'
+import LinesRouter from './lines'
 const apiRouter = new Router()
+apiRouter.use('/lines',LinesRouter)
 apiRouter.use('/gkarticle',GkarticleRouter)
 apiRouter.use('/work',WorkRouter)
 apiRouter.use('/reminder',ReminderRouter)
