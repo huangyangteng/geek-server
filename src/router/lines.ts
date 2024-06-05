@@ -18,7 +18,14 @@ export interface LinesItem {
 
 // 查询
 router.get('/', async (ctx) => {
-    let res = await query<LinesItem[]>('SELECT * from `lines`', [])
+    const {refer}=ctx.request.query
+    let res
+    if(refer){
+        res = await query<LinesItem[]>('SELECT * from `lines` where `refer`=?', [refer])
+    }else{
+        res = await query<LinesItem[]>('SELECT * from `lines`', [])
+    }
+    
     ctx.body = getRes<LinesItem[]>(2000, res)
 })
 
@@ -26,6 +33,15 @@ router.get('/', async (ctx) => {
 router.post('/', async (ctx) => {
     let req = {
         ...ctx.request.body,
+    }
+    // 防止重复添加
+    const findItem = await query<LinesItem[]>('SELECT * from `lines` WHERE `en`=? ', [
+        req.en,
+    ])
+    console.log(findItem)
+    if(findItem.length>0){
+        ctx.body = getRes<string>(5000, '已存在')
+        return 
     }
     const res=await query<OkPacket>('INSERT INTO `lines` SET?', req)
     ctx.body = getRes<number>(2000, res.insertId)

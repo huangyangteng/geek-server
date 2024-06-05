@@ -152,7 +152,7 @@ router.post('/add', async (ctx) => {
     if (from === 'bb') {
         req=await getAddParams( ctx.request.body)
         console.log(req)
-        debugger
+        
 
     } else if (from === 'acfun') {
         const { title, pic } = await getAcVideoInfo(
