@@ -24,7 +24,9 @@ import ReminderRouter from './reminder'
 import WorkRouter from './work'
 import TraderRouter from './trader'
 import LinesRouter from './lines'
+import aiRouter from './ai'
 const apiRouter = new Router()
+apiRouter.use('/ai',aiRouter)
 apiRouter.use('/lines',LinesRouter)
 apiRouter.use('/gkarticle',GkarticleRouter)
 apiRouter.use('/work',WorkRouter)

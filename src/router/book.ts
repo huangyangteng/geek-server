@@ -1,6 +1,6 @@
 import * as Router from 'koa-router'
 const router = new Router()
-import { getRes, formatTime } from '../tools/index'
+import { getRes } from '../tools/index'
 import query from '../db/mysql'
 import { OkPacket } from '../types/index'
 

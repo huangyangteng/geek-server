@@ -1,0 +1,4 @@
+POST http://localhost:22222/ai/openai HTTP/1.1
+content-type:application/json
+
+{"model": "gpt-3.5-turbo", "messages": [{"role": "user", "content": "What is Cloudflare?"}]}
