@@ -1,4 +1,13 @@
+### openai api
 POST http://localhost:22222/ai/openai HTTP/1.1
 content-type:application/json
 
-{"model": "gpt-3.5-turbo", "messages": [{"role": "user", "content": "What is Cloudflare?"}]}
+{"model": "gpt-3.5-turbo", "messages": [{"role": "user", "content": "invite的单词变种"}]}
+
+
+
+### kimi api
+POST http://localhost:22222/ai/kimi HTTP/1.1
+content-type:application/json
+
+{"model": "moonshot-v1-8k", "temperature": 0.3, "messages": [{"role": "user", "content": "invite的单词变种"}]}

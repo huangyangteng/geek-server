@@ -7,7 +7,7 @@
     "dev": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node ./src/server.ts",
     "start": "pm2 start --interpreter='node_modules/.bin/ts-node' src/server.ts",
     "pm2": "NODE_ENV=production pm2 start src/server.ts --watch",
-    "gen":"node scripts/create-file.cjs "
+    "gen": "node scripts/create-file.cjs "
   },
   "author": "",
   "license": "ISC",
@@ -29,6 +29,7 @@
     "koa2-cors": "^2.0.6",
     "node-schedule": "^2.1.0",
     "nodemailer": "^6.8.0",
+    "openai": "^4.51.0",
     "redis": "^4.6.14",
     "ts-node": "^9.0.0"
   },
