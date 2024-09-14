@@ -54,39 +54,39 @@ router.get('/invest', async (ctx) => {
 })
 
 // 上传
-const FILES_PATH = path.join(__dirname, '../data/files.json')
-router.post('/upload', async (ctx) => {
-    const { path, name } = ctx.request.files.file
-    const filePath = 'gk-files' + '/' + path.split('/').pop()
-    const files: File[] = readFileAndParse(FILES_PATH)
-    writeFile<File[]>(FILES_PATH, [
-        {
-            id: uuid(),
-            name,
-            path: filePath,
-            date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-        },
-        ...files,
-    ])
-    ctx.body = getRes<any>(2000, { data: 'ok' })
-})
-// 获取上传的文件列表
-router.get('/files', async (ctx) => {
-    let files: File[] = readFileAndParse(FILES_PATH)
-    let { start, end } = ctx.query
-    // start 与end之间
-    if (start && end) {
-        start = dayjs(start).subtract(1, 'ms')
-        end = dayjs(end).add(1, 'ms')
-        files = files.filter((item) => {
-            return (
-                dayjs(item.date).isAfter(start) &&
-                dayjs(item.date).isBefore(end)
-            )
-        })
-    }
-    ctx.body = getRes<any>(2000, files)
-})
+// const FILES_PATH = path.join(__dirname, '../data/files.json')
+// router.post('/upload', async (ctx) => {
+//     const { path, name } = ctx.request.files.file
+//     const filePath = 'gk-files' + '/' + path.split('/').pop()
+//     const files: File[] = readFileAndParse(FILES_PATH)
+//     writeFile<File[]>(FILES_PATH, [
+//         {
+//             id: uuid(),
+//             name,
+//             path: filePath,
+//             date: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+//         },
+//         ...files,
+//     ])
+//     ctx.body = getRes<any>(2000, { data: 'ok' })
+// })
+// // 获取上传的文件列表
+// router.get('/files', async (ctx) => {
+//     let files: File[] = readFileAndParse(FILES_PATH)
+//     let { start, end } = ctx.query
+//     // start 与end之间
+//     if (start && end) {
+//         start = dayjs(start).subtract(1, 'ms')
+//         end = dayjs(end).add(1, 'ms')
+//         files = files.filter((item) => {
+//             return (
+//                 dayjs(item.date).isAfter(start) &&
+//                 dayjs(item.date).isBefore(end)
+//             )
+//         })
+//     }
+//     ctx.body = getRes<any>(2000, files)
+// })
 
 // 测试接口
 router.all('/test', async (ctx) => {
@@ -150,20 +150,20 @@ router.post('/watch', async (ctx) => {
     })
 })
 
-router.get('/list', async (ctx) => {
-    const { id } = ctx.request.query
-    let list = [
-        { id: 0, name: 'xiaoming', age: 11 },
-        { id: 1, name: 'xiaohong', age: 23 },
-        { id: 2, name: 'Jack', age: 11 },
-        { id: 3, name: 'Peter', age: 23 },
-        { id: 3, name: 'Mouse', age: 23 },
-    ]
-    if (id && id != -1) {
-        list = list.filter((item) => item.id == id)
-    }
-    ctx.body = list
-})
+// router.get('/list', async (ctx) => {
+//     const { id } = ctx.request.query
+//     let list = [
+//         { id: 0, name: 'xiaoming', age: 11 },
+//         { id: 1, name: 'xiaohong', age: 23 },
+//         { id: 2, name: 'Jack', age: 11 },
+//         { id: 3, name: 'Peter', age: 23 },
+//         { id: 3, name: 'Mouse', age: 23 },
+//     ]
+//     if (id && id != -1) {
+//         list = list.filter((item) => item.id == id)
+//     }
+//     ctx.body = list
+// })
 
 router.get('/see', async (ctx) => {
     const { key } = ctx.request.query
@@ -174,7 +174,7 @@ router.get('/see', async (ctx) => {
 // 解析海词词典
 router.get('/translate', async (ctx) => {
     const { word } = ctx.request.query
-    const doc = await fetchDict(word)
+    const doc = await fetchDict(word as string)
     try {
         const res = parseDict(doc)
         ctx.body = getRes<any>(2000, res)
@@ -184,7 +184,7 @@ router.get('/translate', async (ctx) => {
    
 })
 router.get('/bb-test', async (ctx) => {
-    const src = await getBBVideoSrc(ctx.request.query.link)
+    const src = await getBBVideoSrc(ctx.request.query.link as string)
     ctx.body = getRes(200, src)
 })
 
@@ -256,7 +256,7 @@ const getCookie = (name: string, pass: string) => {
 }
 router.get('/checking-in', async (ctx) => {
     const { name, pass } = ctx.request.query
-    const cookie = (await getCookie(name, pass)) as string
+    const cookie = (await getCookie(name as string, pass as string)) as string
     console.log('cookie', cookie)
     const res = await getAttendance(cookie)
     let data = eval('(' + res.data + ')')
@@ -320,7 +320,7 @@ function cancelAttensiton(id:number){
 
 }
 router.get('/cancel-attention',async (ctx) => {
-    let list=ctx.request.query.ids.split(',')
+    let list=(ctx.request.query.ids as string).split(',')
     console.log("list", list,list.length)
     for(let i=0;i<list.length;i++){
        const res= await cancelAttensiton(Number(list[i]))

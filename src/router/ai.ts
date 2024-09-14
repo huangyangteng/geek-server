@@ -4,7 +4,7 @@ import { getRes } from '../tools/index'
 import axios from 'axios';
 const OpenAI = require("openai");
 const kimiClient = new OpenAI({
-    apiKey: process.env.KIMI_API_KEY,    
+    apiKey: process.env.KIMI_API_KEY as string,
     baseURL: "https://api.moonshot.cn/v1",
 });
  

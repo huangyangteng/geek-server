@@ -63,7 +63,7 @@ router.put('/',async ctx=>{
 
 router.get('/info',async ctx=>{
     console.log("ctx.query.link", ctx.query.link)
-    const data=await getTitleFromLink(ctx.query.link)
+    const data=await getTitleFromLink(ctx.query.link as string)
     ctx.body=getRes(2000,data)
 })
 
