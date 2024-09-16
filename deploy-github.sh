@@ -1,5 +1,4 @@
 #/bin/bash
 cd /root/geek-server
-pnpm install &&
+pnpm install && pnpm build
 pm2 restart server
-#pm2 start npm --name "hhh-website"  -- start

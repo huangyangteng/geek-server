@@ -1,12 +1,17 @@
 {
     "compilerOptions": {
+        "target": "ES2020", // 或者"ES2020"或更高版本
         "module": "commonjs",
-        "target": "es2017",
         "noImplicitAny": true,
         "outDir": "./dist",
-        "sourceMap": true
+        "sourceMap": true,
+        "strict": false,
+        "skipLibCheck": true
     },
     "include": [
-        "./src/**/*"
+        "src"
+    ],
+    "exclude": [
+        "node_modules"
     ]
 }

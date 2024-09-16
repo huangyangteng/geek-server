@@ -13,9 +13,9 @@ import * as send from 'koa-send'
 import * as path from 'path'
 
 //@ts-ignore
-import { handleTaobaoData } from '../tools/taobao/handleTaobaoData.js'
-import dayjs = require('dayjs')
-import { createTextChangeRange, createTextSpan } from 'typescript'
+// import { handleTaobaoData } from '../tools/taobao/handleTaobaoData.js'
+// import dayjs = require('dayjs')
+// import { createTextChangeRange, createTextSpan } from 'typescript'
 import { fetchDict, parseDict } from '../tools/haici'
 import { getFundInfo } from '../tools/invest'
 import { getBBVideoSrc } from '../tools/blibli'
@@ -103,29 +103,29 @@ router.all('/test', async (ctx) => {
 })
 
 //https://www.npmjs.com/package/koa-send
-router.all('/taobao', async (ctx) => {
-    const { startTime, endTime, rate } = ctx.request.body
-    const type = rate == 0 ? '中评' : '差评'
-
-    const fileName = `${startTime}-${endTime}${type}_${uuid()}.xlsx`
-    // 生成文件
-    const success = await handleTaobaoData(ctx.request.body, fileName)
-    console.log('success', success)
-    ctx.body = 'ok'
-    if (success) {
-        ctx.body = getRes<any>(2000, {
-            file: fileName,
-        })
-    } else {
-        ctx.body = getRes<string>(5000, '生成excel失败')
-    }
-})
-router.get('/download', async (ctx) => {
-    const fileName = ctx.query.file
-    const path = 'excels/' + fileName
-    ctx.attachment(path)
-    await send(ctx, path)
-})
+// router.all('/taobao', async (ctx) => {
+//     const { startTime, endTime, rate } = ctx.request.body
+//     const type = rate == 0 ? '中评' : '差评'
+//
+//     const fileName = `${startTime}-${endTime}${type}_${uuid()}.xlsx`
+//     // 生成文件
+//     const success = await handleTaobaoData(ctx.request.body, fileName)
+//     console.log('success', success)
+//     ctx.body = 'ok'
+//     if (success) {
+//         ctx.body = getRes<any>(2000, {
+//             file: fileName,
+//         })
+//     } else {
+//         ctx.body = getRes<string>(5000, '生成excel失败')
+//     }
+// })
+// router.get('/download', async (ctx) => {
+//     const fileName = ctx.query.file
+//     const path = 'excels/' + fileName
+//     ctx.attachment(path)
+//     await send(ctx, path)
+// })
 
 router.post('/watch', async (ctx) => {
     const { path } = ctx.request.body
