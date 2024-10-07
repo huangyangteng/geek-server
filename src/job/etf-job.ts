@@ -23,6 +23,7 @@ schedule.scheduleJob(rule, () => {
 
     // etfJob()
 })
+// 设置一个小时内只推送一条
 export const etfJob = async () => {
     /**
      * 1. 把所有的数据查出来
@@ -59,17 +60,17 @@ export const etfJob = async () => {
         )
         if (price < buy1) {
             if (price < buy2) {
-                sendMsg(`${subject} 买买买😀😀😀`)
+                sendMsg(`${subject}买买买😀😀😀`)
             } else {
-                sendMsg(`${subject} 买😀`)
+                sendMsg(`${subject}买😀`)
             }
         }
         // sell1< sell2
         if (price > sell1) {
             if (price > sell2) {
-                sendMsg(`${subject} 卖卖卖😀😀😀`)
+                sendMsg(`${subject}卖卖卖😀😀😀`)
             } else {
-                sendMsg(`${subject} 卖😀`)
+                sendMsg(`${subject}卖😀`)
             }
         }
     }
